@@ -1,6 +1,4 @@
-package RMIClient;
-
-import java.rmi.*;
+package dropmusic.client;
 
 public class Client {
     public static void main(String[] args) {

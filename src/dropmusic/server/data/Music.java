@@ -1,4 +1,4 @@
-package RMIServer;
+package dropmusic.server.data;
 
 /**
  * The type Music.

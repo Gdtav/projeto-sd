@@ -1,11 +1,11 @@
+package dropmusic.multicastserver;
+
 import java.net.MulticastSocket;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.io.IOException;
 
 public class MulticastServer extends Thread {
-    private String MULTICAST_ADDRESS = "224.3.2.1";
-    private int PORT = 4321;
 
     public static void main(String[] args) {
         MulticastServer server1 = new MulticastServer(1);
@@ -16,16 +16,17 @@ public class MulticastServer extends Thread {
         server3.start();
     }
 
-    public MulticastServer(int i) {
+    private MulticastServer(int i) {
         super("Server " + i + ": " + (long) (Math.random() * 1000));
     }
 
     public void run() {
-        MulticastSocket socket = null;
-        System.out.println(this.getName() + " running...");
 
-        try {
-            socket = new MulticastSocket(PORT);  // create socket and bind it
+        System.out.println(this.getName() + " running...");
+        int PORT = 4321;
+        try (MulticastSocket socket = new MulticastSocket(PORT)) {
+            // create socket and bind it
+            String MULTICAST_ADDRESS = "224.3.2.1";
             InetAddress group = InetAddress.getByName(MULTICAST_ADDRESS);
             socket.joinGroup(group);
             while (true) {
@@ -39,8 +40,6 @@ public class MulticastServer extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            socket.close();
         }
     }
 }

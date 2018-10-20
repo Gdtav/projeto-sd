@@ -1,4 +1,4 @@
-package RMIServer;
+package dropmusic.server.data;
 
 /**
  * The type User. This type can only view the information or create reviews.

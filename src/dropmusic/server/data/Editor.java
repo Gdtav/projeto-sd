@@ -1,4 +1,4 @@
-package RMIServer;
+package dropmusic.server.data;
 
 /**
  * The type Editor. This subclass of User is capable of editing the information present on the servers.
