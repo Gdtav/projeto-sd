@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- * The class for communication with dropmusic.client.
+ * The class for communication with client.
  */
 public class Server extends UnicastRemoteObject implements DropMusic {
     /**
@@ -15,6 +15,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
      * @throws RemoteException the remote exception
      */
     protected Server() throws RemoteException {
+        super();
     }
 
 
