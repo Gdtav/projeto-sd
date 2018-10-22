@@ -18,9 +18,13 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         super();
     }
 
-
     @Override
     public String requestAlbumInfo() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public String requestSongInfo() throws RemoteException {
         return null;
     }
 
@@ -32,5 +36,9 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public String logonUser() throws RemoteException {
         return null;
+    }
+
+    @Override
+    public void logoffUser() throws RemoteException {
     }
 }

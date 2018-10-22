@@ -13,7 +13,9 @@ public interface DropMusic extends Remote {
      * @return the string
      * @throws RemoteException the remote exception
      */
-    public String requestAlbumInfo() throws RemoteException;
+    String requestAlbumInfo() throws RemoteException;
+
+    String requestSongInfo() throws RemoteException;
 
     /**
      * Request artist info string.
@@ -21,7 +23,7 @@ public interface DropMusic extends Remote {
      * @return the string
      * @throws RemoteException the remote exception
      */
-    public String requestArtistInfo() throws RemoteException;
+    String requestArtistInfo() throws RemoteException;
 
     /**
      * Logon user string.
@@ -29,6 +31,7 @@ public interface DropMusic extends Remote {
      * @return the string
      * @throws RemoteException the remote exception
      */
-    public String logonUser() throws RemoteException;
+    String logonUser() throws RemoteException;
 
+    void logoffUser() throws RemoteException;
 }
