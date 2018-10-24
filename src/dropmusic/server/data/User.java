@@ -6,9 +6,18 @@ package dropmusic.server.data;
 public class User {
     private String username;
     private String password;
+    private boolean isEditor;
 
     private boolean login(String input) {
         return (input.equals(password));
+    }
+
+    public boolean isEditor() {
+        return isEditor;
+    }
+
+    public void setEditor(boolean editor) {
+        isEditor = editor;
     }
 
     /**
@@ -17,9 +26,10 @@ public class User {
      * @param username the username
      * @param password the password
      */
-    public User(String username, String password) {
+    public User(String username, String password, boolean isEditor) {
         this.username = username;
         this.password = password;
+        this.isEditor = isEditor;
     }
 
     /**

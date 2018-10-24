@@ -1,5 +1,6 @@
 package dropmusic;
 
+import java.net.MulticastSocket;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -7,23 +8,24 @@ import java.rmi.RemoteException;
  * The interface Drop music.
  */
 public interface DropMusic extends Remote {
+    void send(String message, MulticastSocket socket);
     /**
      * Request album info string.
      *
+     * @param input the input
      * @return the string
      * @throws RemoteException the remote exception
      */
-    String requestAlbumInfo() throws RemoteException;
-
-    String requestSongInfo() throws RemoteException;
+    String requestAlbumInfo(String input, MulticastSocket socket) throws RemoteException;
 
     /**
      * Request artist info string.
      *
+     * @param input the input
      * @return the string
      * @throws RemoteException the remote exception
      */
-    String requestArtistInfo() throws RemoteException;
+    String requestArtistInfo(String input, MulticastSocket socket) throws RemoteException;
 
     /**
      * Logon user string.
@@ -31,7 +33,12 @@ public interface DropMusic extends Remote {
      * @return the string
      * @throws RemoteException the remote exception
      */
-    String logonUser() throws RemoteException;
+    String logonUser(MulticastSocket socket) throws RemoteException;
 
-    void logoffUser() throws RemoteException;
+    /**
+     * Logoff user.
+     *
+     * @throws RemoteException the remote exception
+     */
+    void logoffUser(MulticastSocket socket) throws RemoteException;
 }
