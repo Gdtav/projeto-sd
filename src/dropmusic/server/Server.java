@@ -19,6 +19,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     private static int PORT = 4321;
     private static MulticastSocket socket;
     private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
+
     static {
         try {
             socket = new MulticastSocket();
@@ -28,16 +29,17 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     private boolean isMain;
+
     private Server(boolean isMain) throws RemoteException {
         super();
         this.isMain = isMain;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         try {
             Registry registry = LocateRegistry.createRegistry(1234);
             Server server = new Server(true);
-            registry.rebind("dropmusic",server);
+            registry.rebind("dropmusic", server);
             System.out.println("RMI Server online.");
 
             listener.start();
@@ -67,49 +69,48 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         }
     }
 
-    private void read() {
-        String message = listener.getMessage();
-        if (message.contains("response")) {
-
-        }
-    }
-
     @Override
-    public void requestAlbumInfo(String input) throws RemoteException {
-        String message = null;
-        send(message);
-        read();
-    }
-
-    @Override
-    public void requestArtistInfo(String input) throws RemoteException {
-        String message = null;
-        send(message);
-        read();
-    }
-
-    @Override
-    public void showAlbumInfo(String message) throws RemoteException {
-    }
-
-    @Override
-    public void showArtistInfo(String message) throws RemoteException {
+    public void register() {
 
     }
 
     @Override
-    public void logonUser() throws RemoteException {
-        String message = null;
-        send(message);
-        read();
+    public void logonUser(String username, String password) {
+
     }
 
     @Override
-    public void logoffUser() throws RemoteException {
-        String message = null;
-        send(message);
-        read();
+    public void logoffUser() {
+
     }
 
+    @Override
+    public void artistSearch(String input) {
 
+    }
+
+    @Override
+    public void albumSearch(String input) {
+
+    }
+
+    @Override
+    public void albumFromArtistSearch() {
+
+    }
+
+    @Override
+    public void artistInfo() {
+
+    }
+
+    @Override
+    public void albumInfo() {
+
+    }
+
+    @Override
+    public void reviewAlbum(String review) {
+
+    }
 }

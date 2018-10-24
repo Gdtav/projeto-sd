@@ -35,7 +35,17 @@ public class Client implements Remote {
                 int option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        server.logonUser();
+                        System.out.println("Please insert desired username:\n");
+                        String username = scanner.next();
+                        System.out.println("Please insert password:\n");
+                        String password = scanner.next();
+                        System.out.println("Repeat password:\n");
+                        while (!(scanner.next().equals(password))) {
+                            System.out.println("Passwords don't match. Please re-type password:\n");
+                            password = scanner.next();
+                            System.out.println("Repeat password:\n");
+                        }
+                        server.logonUser(username, password);
                         break;
                     case 2:
                         client.searchMenu(scanner, server);
@@ -68,23 +78,27 @@ public class Client implements Remote {
         System.out.println("3 - Return");
         int option = sc.nextInt();
         String input;
-        try {
-            switch (option) {
-                case 1:
-                    System.out.println("Please insert search term: ");
-                    input = sc.next();
-                    server.requestArtistInfo(input);
-                    break;
-                case 2:
-                    System.out.println("Please insert search term: ");
-                    input = sc.next();
-                    server.requestAlbumInfo(input);
-                    break;
-                case 3:
-                    break;
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        switch (option) {
+            case 1:
+                System.out.println("Please insert search term: ");
+                input = sc.next();
+                try {
+                    server.artistSearch(input);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                System.out.println("Please insert search term: ");
+                input = sc.next();
+                try {
+                    server.albumSearch(input);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 3:
+                break;
         }
     }
 }
