@@ -5,16 +5,8 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-/**
- * The type Multicast server.
- */
 public class MulticastServer extends Thread {
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
     public static void main(String[] args) {
         MulticastServer server1 = new MulticastServer(1);
         MulticastServer server2 = new MulticastServer(2);

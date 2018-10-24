@@ -8,22 +8,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
-/**
- * The type Client.
- */
 public class Client implements Remote {
 
-    /**
-     * Instantiates a new Client.
-     */
     public Client() {
     }
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
     public static void main(String[] args) {
         Client client = new Client();
         try {

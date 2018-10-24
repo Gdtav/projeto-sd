@@ -5,9 +5,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-/**
- * The type Multicast listener.
- */
 public class MulticastListener extends Thread {
     private String MULTICAST_ADDRESS;
     private int PORT;
@@ -21,11 +18,6 @@ public class MulticastListener extends Thread {
         this.message = message;
     }
 
-    /**
-     * Instantiates a new Multicast listener.
-     *  @param MULTICAST_ADDRESS the multicast address
-     * @param PORT              the port
-     */
     public MulticastListener(String MULTICAST_ADDRESS, int PORT) {
         super();
         this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;

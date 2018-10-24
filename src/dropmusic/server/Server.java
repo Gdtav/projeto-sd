@@ -13,9 +13,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-/**
- * The class for communication with client.
- */
 public class Server extends UnicastRemoteObject implements DropMusic {
 
     private static String MULTICAST_ADDRESS = "224.0.224.0";
@@ -31,11 +28,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     private boolean isMain;
-    /**
-     * Instantiates a new Server.
-     *
-     * @throws RemoteException the remote exception
-     */
     private Server(boolean isMain) throws RemoteException {
         super();
         this.isMain = isMain;
