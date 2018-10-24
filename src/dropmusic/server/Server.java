@@ -1,8 +1,8 @@
 package dropmusic.server;
 
 import dropmusic.DropMusic;
+import dropmusic.MulticastListener;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -20,6 +20,15 @@ public class Server extends UnicastRemoteObject implements DropMusic {
 
     private static String MULTICAST_ADDRESS = "224.0.224.0";
     private static int PORT = 4321;
+    private static MulticastSocket socket;
+    private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
+    static {
+        try {
+            socket = new MulticastSocket();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private boolean isMain;
     /**
@@ -27,7 +36,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
      *
      * @throws RemoteException the remote exception
      */
-    protected Server(boolean isMain) throws RemoteException {
+    private Server(boolean isMain) throws RemoteException {
         super();
         this.isMain = isMain;
     }
@@ -38,12 +47,11 @@ public class Server extends UnicastRemoteObject implements DropMusic {
             Server server = new Server(true);
             registry.rebind("dropmusic",server);
             System.out.println("RMI Server online.");
-            MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
+
             listener.start();
             System.out.println("MulticastListener started");
-            MulticastSocket socket = new MulticastSocket();
             while (server.isMain) {
-                server.send("Alive",socket);
+                server.send("Alive");
                 Thread.sleep(5000);
             }
         } catch (IOException | InterruptedException e) {
@@ -51,8 +59,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         }
     }
 
-    @Override
-    public void send(String message, MulticastSocket socket) {
+    private void send(String message) {
         byte[] buffer = message.getBytes();
         InetAddress group = null;
         try {
@@ -68,24 +75,48 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         }
     }
 
-    @Override
-    public String requestAlbumInfo(String input, MulticastSocket socket) throws RemoteException {
-        return null;
+    private void read() {
+        String message = listener.getMessage();
+        if (message.contains("response")) {
+
+        }
     }
 
     @Override
-    public String requestArtistInfo(String input, MulticastSocket socket) throws RemoteException {
-        return null;
+    public void requestAlbumInfo(String input) throws RemoteException {
+        String message = null;
+        send(message);
+        read();
     }
 
     @Override
-    public String logonUser(MulticastSocket socket) throws RemoteException {
-        return null;
+    public void requestArtistInfo(String input) throws RemoteException {
+        String message = null;
+        send(message);
+        read();
     }
 
     @Override
-    public void logoffUser(MulticastSocket socket) throws RemoteException {
+    public void showAlbumInfo(String message) throws RemoteException {
+    }
 
+    @Override
+    public void showArtistInfo(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public void logonUser() throws RemoteException {
+        String message = null;
+        send(message);
+        read();
+    }
+
+    @Override
+    public void logoffUser() throws RemoteException {
+        String message = null;
+        send(message);
+        read();
     }
 
 

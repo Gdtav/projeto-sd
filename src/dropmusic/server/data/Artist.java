@@ -3,7 +3,7 @@ package dropmusic.server.data;
 /**
  * The type Artist.
  */
-class Artist {
+public class Artist {
     private String name;
     private Album[] albums;
 

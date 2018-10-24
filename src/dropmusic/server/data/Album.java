@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * The type Album.
  */
-class Album {
+public class Album {
     private int year;
     private String name;
     private String label;

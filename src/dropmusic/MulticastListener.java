@@ -1,4 +1,4 @@
-package dropmusic.server;
+package dropmusic;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -26,7 +26,7 @@ public class MulticastListener extends Thread {
      *  @param MULTICAST_ADDRESS the multicast address
      * @param PORT              the port
      */
-    MulticastListener(String MULTICAST_ADDRESS, int PORT) {
+    public MulticastListener(String MULTICAST_ADDRESS, int PORT) {
         super();
         this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
         this.PORT = PORT;
