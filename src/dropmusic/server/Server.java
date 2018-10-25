@@ -8,18 +8,23 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 public class Server extends UnicastRemoteObject implements DropMusic {
 
     private static String MULTICAST_ADDRESS = "224.0.224.0";
     private static int PORT = 4321;
     private static MulticastSocket socket;
-    private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
+    private static Semaphore semaphore = new Semaphore(1);
+    private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT, semaphore);
+
+
 
     static {
         try {
@@ -37,15 +42,13 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         try {
             Server server = new Server();
             Registry registry = LocateRegistry.createRegistry(7000);
-            registry.rebind("dropmusic", server);
-        } catch (RemoteException e) {
+            registry.bind("dropmusic", server);
+            listener.start();
+        } catch (RemoteException | AlreadyBoundException e) {
             e.printStackTrace();
         }
-        System.out.println("RMI Server online.");
-        listener.start();
-        System.out.println("MulticastListener started");
-
     }
+
 
     private void send(String message) {
         byte[] buffer = message.getBytes();
@@ -66,7 +69,14 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public void register(String username, String password) {
         send("type:register;user:" + username + ";password:" + password);
-        HashMap<String, String> response = listener.getMessage();
+        HashMap<String, String> response;
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        response = listener.getMessage();
+        semaphore.release();
         if (response.getOrDefault("type", "").equals("register_response")) {
             if (response.get("status").equals("successful")) {
                 System.out.println("Registration successful. You can login with your username and password.");
@@ -126,6 +136,11 @@ public class Server extends UnicastRemoteObject implements DropMusic {
 
     @Override
     public void reviewAlbum(String review) {
+
+    }
+
+    @Override
+    public void isAlive() throws RemoteException {
 
     }
 }

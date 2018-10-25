@@ -20,4 +20,6 @@ public interface DropMusic extends Remote {
     void albumInfo() throws RemoteException;
 
     void reviewAlbum(String review) throws RemoteException;
+
+    void isAlive() throws RemoteException;
 }
