@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 
 public class Server extends UnicastRemoteObject implements DropMusic {
 
@@ -28,29 +29,22 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         }
     }
 
-    private boolean isMain;
-
-    private Server(boolean isMain) throws RemoteException {
+    private Server() throws RemoteException {
         super();
-        this.isMain = isMain;
     }
 
     public static void main(String[] args) {
         try {
-            Registry registry = LocateRegistry.createRegistry(1234);
-            Server server = new Server(true);
+            Server server = new Server();
+            Registry registry = LocateRegistry.createRegistry(7000);
             registry.rebind("dropmusic", server);
-            System.out.println("RMI Server online.");
-
-            listener.start();
-            System.out.println("MulticastListener started");
-            while (server.isMain) {
-                server.send("Alive");
-                Thread.sleep(5000);
-            }
-        } catch (IOException | InterruptedException e) {
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
+        System.out.println("RMI Server online.");
+        listener.start();
+        System.out.println("MulticastListener started");
+
     }
 
     private void send(String message) {
@@ -70,23 +64,44 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public void register() {
-
+    public void register(String username, String password) {
+        send("type:register;user:" + username + ";password:" + password);
+        HashMap<String, String> response = listener.getMessage();
+        if (response.getOrDefault("type", "").equals("register_response")) {
+            if (response.get("status").equals("successful")) {
+                System.out.println("Registration successful. You can login with your username and password.");
+            } else {
+                System.out.println("Registration failed. Reason: " + response.get("reason"));
+            }
+        }
     }
 
-    @Override
-    public void logonUser(String username, String password) {
-
-    }
 
     @Override
-    public void logoffUser() {
-
+    public boolean logonUser(String username, String password) {
+        send("type:login_request;user:" + username + ";password:" + password);
+        HashMap<String, String> response = listener.getMessage();
+        int i = 0;
+        if (response.get("type").equals("login_auth")) {
+            if (response.get("status").equals("granted")) {
+                System.out.println("Login succeded");
+                if (response.get("notifications").equals("true"))
+                    while (response.getOrDefault("notification_" + i, null) != null) {
+                        System.out.println(response.get("notification_" + i));
+                        i++;
+                    }
+                return response.get("editor").equals("true");
+            } else {
+                System.out.println("Login failed. Please try again.");
+            }
+        }
+        return false;
     }
 
     @Override
     public void artistSearch(String input) {
-
+        send("type:artist_search;name:" + input);
+        HashMap<String, String> response = listener.getMessage();
     }
 
     @Override

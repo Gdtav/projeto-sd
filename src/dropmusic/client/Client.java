@@ -15,8 +15,9 @@ public class Client implements Remote {
 
     public static void main(String[] args) {
         Client client = new Client();
+        String username, password;
         try {
-            DropMusic server = (DropMusic) LocateRegistry.getRegistry(1234).lookup("dropmusic");
+            DropMusic server = (DropMusic) LocateRegistry.getRegistry(7000).lookup("dropmusic");
             while (true) {
                 System.out.println("  ____                  __  __           _      \n" +
                         " |  _ \\ _ __ ___  _ __ |  \\/  |_   _ ___(_) ___ \n" +
@@ -25,7 +26,8 @@ public class Client implements Remote {
                         " |____/|_|  \\___/| .__/|_|  |_|\\__,_|___/_|\\___|\n" +
                         "                 |_|                            ");
                 System.out.println("Please select an option: (insert the corresponding number and press [enter]");
-                System.out.println("1 - Register");
+                System.out.println("0 - Register");
+                System.out.println("1 - Logon");
                 System.out.println("2 - Search");
                 System.out.println("3 - Transfer music");
                 System.out.println("4 - Edit information");
@@ -34,17 +36,24 @@ public class Client implements Remote {
                 Scanner scanner = new Scanner(System.in);
                 int option = scanner.nextInt();
                 switch (option) {
-                    case 1:
-                        System.out.println("Please insert desired username:\n");
-                        String username = scanner.next();
-                        System.out.println("Please insert password:\n");
-                        String password = scanner.next();
-                        System.out.println("Repeat password:\n");
+                    case 0:
+                        System.out.println("Please insert desired username:");
+                        username = scanner.next();
+                        System.out.println("Please insert password:");
+                        password = scanner.next();
+                        System.out.println("Repeat password:");
                         while (!(scanner.next().equals(password))) {
-                            System.out.println("Passwords don't match. Please re-type password:\n");
+                            System.out.println("Passwords don't match. Please re-type password:");
                             password = scanner.next();
-                            System.out.println("Repeat password:\n");
+                            System.out.println("Repeat password:");
                         }
+                        server.register(username, password);
+                        break;
+                    case 1:
+                        System.out.println("Insert username");
+                        username = scanner.next();
+                        System.out.println("Please insert password:");
+                        password = scanner.next();
                         server.logonUser(username, password);
                         break;
                     case 2:
@@ -59,7 +68,6 @@ public class Client implements Remote {
                     case 5:
                         break;
                     case 6:
-                        server.logoffUser();
                         return;
                 }
             }

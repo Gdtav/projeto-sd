@@ -5,11 +5,9 @@ import java.rmi.RemoteException;
 
 public interface DropMusic extends Remote {
 
-    void register() throws RemoteException;
+    void register(String username, String password) throws RemoteException;
 
-    void logonUser(String username, String password) throws RemoteException;
-
-    void logoffUser() throws RemoteException;
+    boolean logonUser(String username, String password) throws RemoteException;
 
     void artistSearch(String input) throws RemoteException;
 
