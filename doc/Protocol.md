@@ -44,6 +44,16 @@ If the user fails to authenticate:
 
 -   `type:login_auth;status:failed`
 
+##Make Editor
+
+To make a user become an editor:
+
+-   `type:make_editor;user:<username>`
+
+If user exists
+
+-   `type:make_editor_response;status:<success/insuccess>`
+
 ## Search
 
 ### Artist

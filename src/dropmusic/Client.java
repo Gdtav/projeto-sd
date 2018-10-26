@@ -9,8 +9,10 @@ import java.util.Scanner;
 
 public class Client implements Remote {
 
+    private boolean[] status;
     private DropMusic server;
     public Client() {
+        this.status = new boolean[2];
     }
 
     public static void main(String[] args) {
@@ -32,18 +34,13 @@ public class Client implements Remote {
                         " |____/|_|  \\___/| .__/|_|  |_|\\__,_|___/_|\\___|\n" +
                         "                 |_|                            ");
                 System.out.println("Please select an option: (insert the corresponding number and press [enter]");
-                System.out.println("0 - Register");
-                System.out.println("1 - Logon");
-                System.out.println("2 - Search");
-                System.out.println("3 - Transfer music");
-                System.out.println("4 - Edit information");
-                System.out.println("5 - Manage editors");
-                System.out.println("6 - Exit");
-                client.server = failover.getStub();
+                System.out.println("1 - Register");
+                System.out.println("2 - Logon");
+                System.out.println("3 - Exit");
                 Scanner scanner = new Scanner(System.in);
                 int option = scanner.nextInt();
                 switch (option) {
-                    case 0:
+                    case 1:
                         System.out.println("Please insert desired username:");
                         username = scanner.next();
                         System.out.println("Please insert password:");
@@ -56,25 +53,19 @@ public class Client implements Remote {
                         }
                         client.server.register(username, password);
                         break;
-                    case 1:
+                    case 2:
                         System.out.println("Insert username");
                         username = scanner.next();
                         System.out.println("Please insert password:");
                         password = scanner.next();
-                        client.server.logonUser(username, password);
-                        break;
-                    case 2:
-                        client.searchMenu(scanner, client.server);
+                        client.status = client.server.logonUser(username, password);
+                        if (client.status[0]) {
+                            client.mainMenu(client.status[1]);
+                        } else {
+                            System.out.println("invalid login. Please retry with a different username/password combination.");
+                        }
                         break;
                     case 3:
-                        client.connectTCP();
-                        break;
-                    case 4:
-
-                        break;
-                    case 5:
-                        break;
-                    case 6:
                         return;
                 }
             }
@@ -83,7 +74,62 @@ public class Client implements Remote {
         }
     }
 
+    private void mainMenu(boolean editor) {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+        if (editor) {
+            System.out.println("Please select what you want to do:");
+            System.out.println("1 - Search");
+            System.out.println("2 - Transfer music");
+            System.out.println("3 - Edit information");
+            System.out.println("4 - Manage editors");
+            System.out.println("5 - Exit");
+            option = scanner.nextInt();
+            switch (option) {
+                case 1:
+                    searchMenu(scanner, server);
+                    break;
+                case 2:
+                    connectTCP();
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    System.out.println("Please insert username to become editor:");
+                    try {
+                        if (server.makeEditor(scanner.next()))
+                            System.out.println("Upgrade to editor succeeded.");
+                        else
+                            System.out.println("Failed to upgrade to editor.");
+                        break;
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                case 5:
+                    break;
+            }
+        } else {
+            System.out.println("Please select what you want to do:");
+            System.out.println("1 - Search");
+            System.out.println("2 - Transfer music");
+            System.out.println("3 - Exit");
+            option = scanner.nextInt();
+            switch (option) {
+                case 1:
+                    searchMenu(scanner, server);
+                    break;
+                case 2:
+                    connectTCP();
+                    break;
+                case 3:
+                    break;
+            }
+        }
+
+    }
+
     private void connectTCP() {
+
     }
 
     private void searchMenu(Scanner sc, DropMusic server) {
