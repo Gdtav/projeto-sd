@@ -191,6 +191,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public ArrayList<String> editArtistInfo(String input) {
         // TODO
+        return null;
     }
 
     @Override
@@ -217,6 +218,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public ArrayList<String> editAlbumInfo(String input) {
         // TODO
+        return null;
     }
 
     @Override

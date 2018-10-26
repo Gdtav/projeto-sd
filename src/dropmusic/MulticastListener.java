@@ -10,10 +10,15 @@ import java.util.concurrent.Semaphore;
 public class MulticastListener extends Thread {
     private String MULTICAST_ADDRESS;
     private int PORT;
+
+    private void setMessage(HashMap<String, String> message) {
+        this.message = message;
+    }
+
     private HashMap<String, String> message;
     private Semaphore semaphore;
 
-    public MulticastListener(String MULTICAST_ADDRESS, int PORT, Semaphore semaphore) {
+    MulticastListener(String MULTICAST_ADDRESS, int PORT, Semaphore semaphore) {
         super();
         this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
         this.PORT = PORT;
@@ -34,7 +39,7 @@ public class MulticastListener extends Thread {
                 semaphore.acquire();
                 System.out.println("Received packet from " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + " with message:");
                 String message = new String(packet.getData(), 0, packet.getLength());
-                createMap(message);
+                setMessage(createMap(message));
                 System.out.println(message);
                 semaphore.release();
             }
@@ -43,7 +48,7 @@ public class MulticastListener extends Thread {
         }
     }
 
-    public HashMap<String, String> getMessage() {
+    HashMap<String, String> getMessage() {
         if(!message.isEmpty()) {
             HashMap<String, String> messageClone = new HashMap<String, String>(message);
             message.clear();
@@ -52,15 +57,18 @@ public class MulticastListener extends Thread {
         return message;
     }
 
-    private void createMap(String buffer) {
+    private HashMap<String, String> createMap(String buffer) {
         try {
+            HashMap<String, String> message = new HashMap<>();
             String[] pairs = buffer.split(";");
             for (String pair : pairs) {
                 String[] splitted = pair.split(":");
                 message.put(splitted[0], splitted[1]);
             }
+            return message;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
