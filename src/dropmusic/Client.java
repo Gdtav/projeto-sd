@@ -5,6 +5,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Client implements Remote {
@@ -87,12 +88,13 @@ public class Client implements Remote {
             option = scanner.nextInt();
             switch (option) {
                 case 1:
-                    searchMenu(scanner, server);
+                    searchMenu(scanner, false);
                     break;
                 case 2:
                     connectTCP();
                     break;
                 case 3:
+                    searchMenu(scanner, true);
                     break;
                 case 4:
                     System.out.println("Please insert username to become editor:");
@@ -116,7 +118,7 @@ public class Client implements Remote {
             option = scanner.nextInt();
             switch (option) {
                 case 1:
-                    searchMenu(scanner, server);
+                    searchMenu(scanner, false);
                     break;
                 case 2:
                     connectTCP();
@@ -132,7 +134,8 @@ public class Client implements Remote {
 
     }
 
-    private void searchMenu(Scanner sc, DropMusic server) {
+    private void searchMenu(Scanner sc, boolean edition) {
+        HashMap<Integer, String> result = new HashMap<>();
         int i;
         System.out.println("Please select an option: (insert the corresponding number and press [enter]");
         System.out.println("1 - Search artist");
@@ -149,7 +152,16 @@ public class Client implements Remote {
                     for (String artist : server.artistSearch(input)) {
                         System.out.println(i + " - " + artist);
                         i++;
+                        result.put(i, artist);
                     }
+                    System.out.println("Insert desired artist number:");
+                    option = sc.nextInt();
+                    if (edition) {
+                        server.editArtistInfo(result.get(option));
+                    } else {
+                        System.out.println(server.showArtistInfo(result.get(option)).toString());
+                    }
+
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -162,6 +174,14 @@ public class Client implements Remote {
                     for (String album : server.albumSearch(input)) {
                         System.out.println(i + " - " + album);
                         i++;
+                        result.put(i, album);
+                    }
+                    System.out.println("Insert desired album number:");
+                    option = sc.nextInt();
+                    if (edition) {
+                        server.editAlbumInfo(result.get(option));
+                    } else {
+                        System.out.println(server.showAlbumInfo(result.get(option)).toString());
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();

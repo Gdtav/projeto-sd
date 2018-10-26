@@ -16,13 +16,17 @@ interface DropMusic extends Remote {
 
     ArrayList<String> albumFromArtistSearch(String input) throws RemoteException;
 
-    ArrayList<String> artistInfo(String input) throws RemoteException;
-
-    ArrayList<String> albumInfo(String input) throws RemoteException;
-
     boolean makeEditor(String input) throws RemoteException;
 
     void reviewAlbum(String review) throws RemoteException;
 
     void isAlive() throws RemoteException;
+
+    ArrayList<String> editArtistInfo(String input);
+
+    ArrayList<String> showArtistInfo(String input);
+
+    ArrayList<String> editAlbumInfo(String input);
+
+    ArrayList<String> showAlbumInfo(String input);
 }

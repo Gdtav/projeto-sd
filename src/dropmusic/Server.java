@@ -163,48 +163,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public ArrayList<String> artistInfo(String input) {
-        ArrayList<String> query = new ArrayList<>();
-        send("type:artist_info;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
-        if (response.get("type").equals("artist_info_response") && response.get("status").equals("found")) {
-            query.addAll(response.values());
-            query.remove("artist_info_response");
-            query.remove("found");
-        } else if (response.get("type").equals("album_info_response") && response.get("status").equals("not_found")) {
-            query.add("failed to retrieve artist info");
-        }
-        return query;
-    }
-
-    @Override
-    public ArrayList<String> albumInfo(String input) {
-        ArrayList<String> query = new ArrayList<>();
-        send("type:album_info;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
-        if (response.get("type").equals("album_info_response") && response.get("status").equals("found")) {
-            query.addAll(response.values());
-            query.remove("album_info_response");
-            query.remove("found");
-        } else if (response.get("type").equals("album_info_response") && response.get("status").equals("not_found")) {
-            query.add("failed to retrieve album info");
-        }
-        return query;
-    }
-
-    @Override
     public boolean makeEditor(String input) {
         send("type:make_editor;user:" + input);
         try {
@@ -228,5 +186,57 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public void isAlive() {
 
+    }
+
+    @Override
+    public ArrayList<String> editArtistInfo(String input) {
+        // TODO
+    }
+
+    @Override
+    public ArrayList<String> showArtistInfo(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:artist_info;name:" + input);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> response = listener.getMessage();
+        semaphore.release();
+        if (response.get("type").equals("artist_info_response") && response.get("status").equals("found")) {
+            query.addAll(response.values());
+            query.remove("artist_info_response");
+            query.remove("found");
+        } else if (response.get("type").equals("album_info_response") && response.get("status").equals("not_found")) {
+            query.add("failed to retrieve artist info");
+        }
+        return query;
+    }
+
+    @Override
+    public ArrayList<String> editAlbumInfo(String input) {
+        // TODO
+    }
+
+    @Override
+    public ArrayList<String> showAlbumInfo(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:album_info;name:" + input);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> response = listener.getMessage();
+        semaphore.release();
+        if (response.get("type").equals("album_info_response") && response.get("status").equals("found")) {
+            query.addAll(response.values());
+            query.remove("album_info_response");
+            query.remove("found");
+        } else if (response.get("type").equals("album_info_response") && response.get("status").equals("not_found")) {
+            query.add("failed to retrieve album info");
+        }
+        return query;
     }
 }
