@@ -3,7 +3,7 @@ package dropmusic;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface DropMusic extends Remote {
+interface DropMusic extends Remote {
 
     void register(String username, String password) throws RemoteException;
 

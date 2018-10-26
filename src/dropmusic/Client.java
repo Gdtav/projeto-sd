@@ -1,23 +1,29 @@
-package dropmusic.client;
-
-import dropmusic.DropMusic;
+package dropmusic;
 
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class Client implements Remote {
 
+    private DropMusic server;
     public Client() {
     }
 
     public static void main(String[] args) {
+        System.out.println("Please insert server's address:");
+        String host = new Scanner(System.in).next();
         Client client = new Client();
         String username, password;
+        int port = 5000;
         try {
-            DropMusic server = (DropMusic) LocateRegistry.getRegistry(7000).lookup("dropmusic");
+            Registry registry = LocateRegistry.getRegistry(host, port);
+            client.setServer((DropMusic) registry.lookup("dropmusic"));
+            Failover failover = new Failover(client.getServer(), host, port, client);
+            failover.start();
             while (true) {
                 System.out.println("  ____                  __  __           _      \n" +
                         " |  _ \\ _ __ ___  _ __ |  \\/  |_   _ ___(_) ___ \n" +
@@ -33,6 +39,7 @@ public class Client implements Remote {
                 System.out.println("4 - Edit information");
                 System.out.println("5 - Manage editors");
                 System.out.println("6 - Exit");
+                client.server = failover.getStub();
                 Scanner scanner = new Scanner(System.in);
                 int option = scanner.nextInt();
                 switch (option) {
@@ -47,17 +54,17 @@ public class Client implements Remote {
                             password = scanner.next();
                             System.out.println("Repeat password:");
                         }
-                        server.register(username, password);
+                        client.server.register(username, password);
                         break;
                     case 1:
                         System.out.println("Insert username");
                         username = scanner.next();
                         System.out.println("Please insert password:");
                         password = scanner.next();
-                        server.logonUser(username, password);
+                        client.server.logonUser(username, password);
                         break;
                     case 2:
-                        client.searchMenu(scanner, server);
+                        client.searchMenu(scanner, client.server);
                         break;
                     case 3:
                         client.connectTCP();
@@ -108,5 +115,13 @@ public class Client implements Remote {
             case 3:
                 break;
         }
+    }
+
+    public DropMusic getServer() {
+        return server;
+    }
+
+    public void setServer(DropMusic server) {
+        this.server = server;
     }
 }

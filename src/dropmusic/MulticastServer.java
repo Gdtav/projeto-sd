@@ -1,4 +1,4 @@
-package dropmusic.multicastserver;
+package dropmusic;
 
 import dropmusic.MulticastListener;
 import java.io.IOException;
