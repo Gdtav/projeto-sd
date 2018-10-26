@@ -30,13 +30,13 @@ public class MulticastListener extends Thread {
             while (true) {
                 byte[] buffer = new byte[256];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                semaphore.acquire();
                 multicastSocket.receive(packet);
-                semaphore.release();
+                semaphore.acquire();
                 System.out.println("Received packet from " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + " with message:");
                 String message = new String(packet.getData(), 0, packet.getLength());
                 createMap(message);
                 System.out.println(message);
+                semaphore.release();
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -44,6 +44,11 @@ public class MulticastListener extends Thread {
     }
 
     public HashMap<String, String> getMessage() {
+        if(!message.isEmpty()) {
+            HashMap<String, String> messageClone = new HashMap<String, String>(message);
+            message.clear();
+            return messageClone;
+        }
         return message;
     }
 
