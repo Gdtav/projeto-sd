@@ -38,7 +38,7 @@ When a user tries to login:
 
 If the user logins:
 
--   `type:login_auth;status:granted;editor:<true/false>;notifications:<true/false>;notification_text:<notification_text1>;notification_text:<notification_text2>;...`
+-   `type:login_auth;status:granted;editor:<true/false>;notifications:<true/false>;notification_1:<notification_text1>;notification_2:<notification_text2>;...`
 
 If the user fails to authenticate:
 
@@ -53,7 +53,7 @@ When the user searches for an artist:
 
 If an artist, or several, is found:
 
--   `type:artist_search_response;status:found;name:<artist_name1>;name:<artist_name2>;...`
+-   `type:artist_search_response;status:found;name_1:<artist_name1>;name_2:<artist_name2>;...`
 
 If none are found:
 
@@ -66,7 +66,7 @@ If the user wishes to see more info on the artist:
 
 If info is retrieved:
 
--   `type:artist_info_response;status:found;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album:<album_name1>;album_release:<album_release_date1>;album:<album_name2>;album_release:<album_release_date2> ...`
+-   `type:artist_info_response;status:found;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album_1:<album_name1>;album_release_1:<album_release_date1>;album_2:<album_name2>;album_release_2:<album_release_date2> ...`
 
 if not:
 
@@ -83,7 +83,7 @@ When the user searches for an album directly:
 
 If an album, or several, is found:
 
--   `type:album_search_response;status:found;name:<album_name1>:name:<album_name2>;...`
+-   `type:album_search_response;status:found;name_1:<album_name1>:name_2:<album_name2>;...`
 
 If none are found:
 
@@ -96,7 +96,7 @@ If the user wishes to see more info on the album:
 
 If the info is found:
 
--   `type:album_info_reponse;status:found;artist_name:<artist_name>;album_name:<album_name>;song:<song1>;song:<song2>;...;review:<review_score>;review_desc:<review_description>;...;`
+-   `type:album_info_reponse;status:found;artist_name:<artist_name>;album_name:<album_name>;song_1:<song1>;song_2:<song2>;...;review_1:<review_score>;review_desc_1:<review_description>;...;`
 
 If not:
 
