@@ -54,9 +54,7 @@ public class MulticastServer extends Thread {
         HashMap<String, String> response;
         while(true) {
             try {
-                System.out.println("Waiting for dude");
                 semaphore.acquire();
-                System.out.println("He dune");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -128,7 +126,7 @@ public class MulticastServer extends Thread {
     public void logonUser(String username, String password) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String query = "SELECT idUsers, editor FROM users WHERE username = '" + username + "' AND password = SHA2('" + password + "',256)";
-            String response = "type:login_auth;status:granted";
+            String response = "type:login_auth;status:granted;";
             ResultSet rs = st.executeQuery(query);
 
             int rows = countRows(rs);
@@ -137,15 +135,15 @@ public class MulticastServer extends Thread {
                 rs.next();
                 int idUsers = rs.getInt(1);
                 String editor = rs.getString(2);
-                response += "editor" + "1".equals(editor);
+                response += "editor:" + "1".equals(editor);
                 query = "SELECT notification FROM notifications WHERE Users_idUsers = " + idUsers ;
                 rs = st.executeQuery(query);
                 int rows2 = countRows(rs);
                 if(rows2 == 0) {
-                    response += "notifications:false";
+                    response += ";notifications:false";
                 }
                 else if(rows > 0) {
-                    response += "notifications:true";
+                    response += ";notifications:true";
                     int not = 0;
                     while(rs.next()) {
                         response += ";notification_" + (not++) + ":"+ rs.getString(1);
@@ -168,7 +166,7 @@ public class MulticastServer extends Thread {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String[]split_string = art_name.split(" ");
 
-            String query = "SELECT name FROM artists WHERE (name like '%"+ split_string[0] +"%')";
+            String query = "SELECT name FROM artists WHERE (name like '%"+ split_string[0] +"%' LIMIT 7)";
             for(int i=1;i<split_string.length;i++) {
                 query += " OR (name like '%" + split_string[i] + "%'";
             }
@@ -181,7 +179,7 @@ public class MulticastServer extends Thread {
             if(rows > 0) {
                 result += "status:found";
                 int name = 0;
-                while(rn.next()) {
+                while(rs.next()) {
                     result += ";name_" + (name++) + ":" + rs.getString(1);
                 }
             }
@@ -212,7 +210,7 @@ public class MulticastServer extends Thread {
                 rs = st.executeQuery(query);
 
                 int album = 0;
-                while(rn.next()) {
+                while(rs.next()) {
                     result += ";album_" + (album++) + ":" + rs.getString(2) + "album_release_1:" + rs.getString(3);
                 }
             }
@@ -242,7 +240,7 @@ public class MulticastServer extends Thread {
 
     }
 
-    public int countRows(Resultset rs) {
+    public int countRows(ResultSet rs) throws SQLException {
         int rows = 0;
         rs.last();
         rows = rs.getRow();
