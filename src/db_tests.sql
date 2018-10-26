@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `dropmusic`.`Artists` (
 ENGINE = InnoDB;
 
 INSERT INTO `Artists`(idArtists,name,activity_start,activity_end,description) VALUES 
-(1,'Nelly Swag','2018-10-25','2018-10-26','A little girl who loves to sing'),
-(2,'Mika','2015-12-15','2018-10-11','French Pop Singer who sings like a girl'),
-(3,'Galileo Galilei','2012-05-22','2014-02-12','They broke up years ago, so sad. Alexa');
+(NULL,'Nelly Swag','2018-10-25','2018-10-26','A little girl who loves to sing'),
+(NULL,'Mika','2015-12-15','2018-10-11','French Pop Singer who sings like a girl'),
+(NULL,'Galileo Galilei','2012-05-22','2014-02-12','They broke up years ago, so sad. Alexa');
 
 -- -----------------------------------------------------
 -- Table `dropmusic`.`Albums`
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS `dropmusic`.`Albums` (
 ENGINE = InnoDB;
 
 INSERT INTO `Albums`(idAlbums,name,release_date,Artists_idArtists) VALUES
-(1,'Criancinha','2018-10-12',1),
-(2,'Musica Pop','2016-07-28',2),
-(3,'Leonardo','2015-02-15',3);
+(NULL,'Criancinha','2018-10-12',1),
+(NULL,'Musica Pop','2016-07-28',2),
+(NULL,'Leonardo','2015-02-15',3);
 -- -----------------------------------------------------
 -- Table `dropmusic`.`Songs`
 -- -----------------------------------------------------
@@ -132,7 +132,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `dropmusic`.`Concerts` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Concerts` (
-  `idConcerts` INT NOT NULL,
+  `idConcerts` INT NOT NULL AUTO_INCREMENT,
   `city` VARCHAR(45) NOT NULL,
   `date` DATE NULL,
   PRIMARY KEY (`idConcerts`))
@@ -169,7 +169,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `dropmusic`.`Users` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Users` (
-  `idUsers` INT NOT NULL,
+  `idUsers` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(256) NOT NULL,
   `editor` BINARY(1) NOT NULL,
@@ -177,16 +177,16 @@ CREATE TABLE IF NOT EXISTS `dropmusic`.`Users` (
 ENGINE = InnoDB;
 
 INSERT INTO `Users`(idUsers,username,password,editor) VALUES
-(1, 'Pmsilva', SHA2('password',256), 1),
-(2, 'Gui', SHA2('password123',256), 1),
-(3, 'Tester', SHA2('test',256), 0);
+(NULL, 'Pmsilva', SHA2('password',256), 1),
+(NULL, 'Gui', SHA2('password123',256), 1),
+(NULL, 'Tester', SHA2('test',256), 0);
 -- -----------------------------------------------------
 -- Table `dropmusic`.`Song_Storage`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `dropmusic`.`Song_Storage` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Song_Storage` (
-  `idSong_Storage` INT NOT NULL,
+  `idSong_Storage` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(50) NOT NULL,
   `server_address` VARCHAR(50) NOT NULL,
   `Songs_idSongs` INT NOT NULL,
@@ -230,7 +230,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `dropmusic`.`Ratings` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Ratings` (
-  `idRatings` INT NOT NULL,
+  `idRatings` INT NOT NULL AUTO_INCREMENT,
   `review` VARCHAR(256) NOT NULL,
   `rating` TINYINT(5) NOT NULL,
   `Users_idUsers` INT NOT NULL,
@@ -258,7 +258,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `dropmusic`.`Notifications` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Notifications` (
-  `idNotifications` INT NOT NULL,
+  `idNotifications` INT NOT NULL AUTO_INCREMENT,
   `notification` VARCHAR(256) NOT NULL,
   `Users_idUsers` INT NOT NULL,
   PRIMARY KEY (`idNotifications`, `Users_idUsers`),
@@ -326,7 +326,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `dropmusic`.`Genre` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Genre` (
-  `idGenre` INT NOT NULL,
+  `idGenre` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`idGenre`))
 ENGINE = InnoDB;
@@ -389,7 +389,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `dropmusic`.`Members` ;
 
 CREATE TABLE IF NOT EXISTS `dropmusic`.`Members` (
-  `idMembers` INT NOT NULL,
+  `idMembers` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`idMembers`))
 ENGINE = InnoDB;
