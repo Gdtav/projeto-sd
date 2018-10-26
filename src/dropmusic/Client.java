@@ -87,6 +87,7 @@ public class Client implements Remote {
     }
 
     private void searchMenu(Scanner sc, DropMusic server) {
+        int i;
         System.out.println("Please select an option: (insert the corresponding number and press [enter]");
         System.out.println("1 - Search artist");
         System.out.println("2 - Search album");
@@ -97,8 +98,12 @@ public class Client implements Remote {
             case 1:
                 System.out.println("Please insert search term: ");
                 input = sc.next();
+                i = 0;
                 try {
-                    server.artistSearch(input);
+                    for (String artist : server.artistSearch(input)) {
+                        System.out.println(i + " - " + artist);
+                        i++;
+                    }
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -106,8 +111,12 @@ public class Client implements Remote {
             case 2:
                 System.out.println("Please insert search term: ");
                 input = sc.next();
+                i = 0;
                 try {
-                    server.albumSearch(input);
+                    for (String album : server.albumSearch(input)) {
+                        System.out.println(i + " - " + album);
+                        i++;
+                    }
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -117,11 +126,11 @@ public class Client implements Remote {
         }
     }
 
-    public DropMusic getServer() {
+    private DropMusic getServer() {
         return server;
     }
 
-    public void setServer(DropMusic server) {
+    void setServer(DropMusic server) {
         this.server = server;
     }
 }

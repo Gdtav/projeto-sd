@@ -7,6 +7,7 @@ import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
@@ -23,22 +24,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         PORT = port;
         this.semaphore = semaphore;
         this.listener = listener;
-    }
-
-    public String getMULTICAST_ADDRESS() {
-        return MULTICAST_ADDRESS;
-    }
-
-    public void setMULTICAST_ADDRESS(String MULTICAST_ADDRESS) {
-        this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
-    }
-
-    public int getPORT() {
-        return PORT;
-    }
-
-    public void setPORT(int PORT) {
-        this.PORT = PORT;
     }
 
     private void send(String message) {
@@ -106,34 +91,78 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public void artistSearch(String input) {
+    public ArrayList<String> artistSearch(String input) {
+        ArrayList<String> query = new ArrayList<>();
         send("type:artist_search;name:" + input);
         HashMap<String, String> response = listener.getMessage();
         int i = 0;
-        if (response.get("type").equals("artist_search_response") && response.get("status").equals("found"))
-            while (response.getOrDefault("notification_" + i, null) != null) {
-
+        if (response.get("type").equals("artist_search_response") && response.get("status").equals("found")) {
+            while (response.getOrDefault("name_" + i, null) != null) {
+                query.add(response.get("name_" + i));
+                i++;
             }
+        }
+        return query;
     }
 
     @Override
-    public void albumSearch(String input) {
-
+    public ArrayList<String> albumSearch(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:album_search;name:" + input);
+        HashMap<String, String> response = listener.getMessage();
+        int i = 0;
+        if (response.get("type").equals("album_search_response") && response.get("status").equals("found")) {
+            while (response.getOrDefault("name_" + i, null) != null) {
+                query.add(response.get("name_" + i));
+                i++;
+            }
+        }
+        return query;
     }
 
     @Override
-    public void albumFromArtistSearch() {
-
+    public ArrayList<String> albumFromArtistSearch(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:album_search_artist;name:" + input);
+        HashMap<String, String> response = listener.getMessage();
+        int i = 0;
+        if (response.get("type").equals("album_search_response") && response.get("status").equals("found")) {
+            while (response.getOrDefault("name_" + i, null) != null) {
+                query.add(response.get("name_" + i));
+                i++;
+            }
+        }
+        return query;
     }
 
     @Override
-    public void artistInfo() {
-
+    public ArrayList<String> artistInfo(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:artist_info;name:" + input);
+        HashMap<String, String> response = listener.getMessage();
+        if (response.get("type").equals("artist_info_response") && response.get("status").equals("found")) {
+            query.addAll(response.values());
+            query.remove("artist_info_response");
+            query.remove("found");
+        } else if (response.get("type").equals("album_info_response") && response.get("status").equals("not_found")) {
+            query.add("failed to retrieve artist info");
+        }
+        return query;
     }
 
     @Override
-    public void albumInfo() {
-
+    public ArrayList<String> albumInfo(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:album_info;name:" + input);
+        HashMap<String, String> response = listener.getMessage();
+        if (response.get("type").equals("album_info_response") && response.get("status").equals("found")) {
+            query.addAll(response.values());
+            query.remove("album_info_response");
+            query.remove("found");
+        } else if (response.get("type").equals("album_info_response") && response.get("status").equals("not_found")) {
+            query.add("failed to retrieve album info");
+        }
+        return query;
     }
 
     @Override
@@ -142,7 +171,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public void isAlive() throws RemoteException {
+    public void isAlive() {
 
     }
 }

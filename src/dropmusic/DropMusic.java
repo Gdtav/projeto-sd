@@ -2,6 +2,7 @@ package dropmusic;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 interface DropMusic extends Remote {
 
@@ -9,15 +10,15 @@ interface DropMusic extends Remote {
 
     boolean logonUser(String username, String password) throws RemoteException;
 
-    void artistSearch(String input) throws RemoteException;
+    ArrayList<String> artistSearch(String input) throws RemoteException;
 
-    void albumSearch(String input) throws RemoteException;
+    ArrayList<String> albumSearch(String input) throws RemoteException;
 
-    void albumFromArtistSearch() throws RemoteException;
+    ArrayList<String> albumFromArtistSearch(String input) throws RemoteException;
 
-    void artistInfo() throws RemoteException;
+    ArrayList<String> artistInfo(String input) throws RemoteException;
 
-    void albumInfo() throws RemoteException;
+    ArrayList<String> albumInfo(String input) throws RemoteException;
 
     void reviewAlbum(String review) throws RemoteException;
 
