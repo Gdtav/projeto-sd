@@ -4,15 +4,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.concurrent.Semaphore;
 
 public class RMIServer {
 
     public static void main(String[] args) {
-        Semaphore semaphore = new Semaphore(1);
         String MULTICAST_ADDRESS = "224.0.224.0";
         int PORT = 4321;
-        MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT, semaphore);
+        MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
         try {
             Registry registry = LocateRegistry.getRegistry(5000);
             DropMusic server = (DropMusic) registry.lookup("dropmusic");
@@ -23,7 +21,7 @@ public class RMIServer {
             }
         } catch (RemoteException | NotBoundException | InterruptedException e) {
             try {
-                DropMusic server = new Server(MULTICAST_ADDRESS, PORT, semaphore, listener);
+                DropMusic server = new Server(MULTICAST_ADDRESS, PORT, listener);
                 Registry registry = LocateRegistry.createRegistry(5000);
                 registry.rebind("dropmusic", server);
                 System.out.println("Main server alive");

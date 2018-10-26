@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.HashMap;
-import java.util.concurrent.Semaphore;
 
 public class MulticastListener extends Thread {
     private String MULTICAST_ADDRESS;
@@ -16,14 +15,12 @@ public class MulticastListener extends Thread {
     }
 
     private HashMap<String, String> message;
-    private Semaphore semaphore;
 
-    MulticastListener(String MULTICAST_ADDRESS, int PORT, Semaphore semaphore) {
+    MulticastListener(String MULTICAST_ADDRESS, int PORT) {
         super();
         this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
         this.PORT = PORT;
         this.message = new HashMap<>();
-        this.semaphore = semaphore;
     }
 
     @Override
@@ -36,14 +33,12 @@ public class MulticastListener extends Thread {
                 byte[] buffer = new byte[256];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 multicastSocket.receive(packet);
-                semaphore.acquire();
                 System.out.println("Received packet from " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + " with message:");
                 String message = new String(packet.getData(), 0, packet.getLength());
                 setMessage(createMap(message));
                 System.out.println(message);
-                semaphore.release();
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

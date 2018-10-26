@@ -9,20 +9,17 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Semaphore;
 
 public class Server extends UnicastRemoteObject implements DropMusic {
 
     private String MULTICAST_ADDRESS;
     private int PORT;
-    private Semaphore semaphore;
     private MulticastListener listener;
 
-    Server(String multicast_address, int port, Semaphore semaphore, MulticastListener listener) throws RemoteException {
+    Server(String multicast_address, int port, MulticastListener listener) throws RemoteException {
         super();
         MULTICAST_ADDRESS = multicast_address;
         PORT = port;
-        this.semaphore = semaphore;
         this.listener = listener;
     }
 
@@ -52,13 +49,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public void register(String username, String password) {
         send("type:register;user:" + username + ";password:" + password);
         HashMap<String, String> response;
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         response = listener.getMessage();
-        semaphore.release();
         if (response.getOrDefault("type", "").equals("register_response")) {
             if (response.get("status").equals("successful")) {
                 System.out.println("Registration successful. You can login with your username and password.");
@@ -73,13 +64,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public boolean[] logonUser(String username, String password) {
         boolean[] res = new boolean[2];
         send("type:login_request;user:" + username + ";password:" + password);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         int i = 0;
         if (response.get("type").equals("login_auth")) {
             if (response.get("status").equals("granted")) {
@@ -103,13 +88,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> artistSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:artist_search;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         int i = 0;
         if (response.get("type").equals("artist_search_response") && response.get("status").equals("found")) {
             while (response.getOrDefault("name_" + i, null) != null) {
@@ -124,13 +103,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> albumSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:album_search;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         int i = 0;
         if (response.get("type").equals("album_search_response") && response.get("status").equals("found")) {
             while (response.getOrDefault("name_" + i, null) != null) {
@@ -145,13 +118,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> albumFromArtistSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:album_search_artist;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         int i = 0;
         if (response.get("type").equals("album_search_response") && response.get("status").equals("found")) {
             while (response.getOrDefault("name_" + i, null) != null) {
@@ -165,13 +132,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public boolean makeEditor(String input) {
         send("type:make_editor;user:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         if (response.get("type").equals("make_editor_response"))
             return response.get("status").equals("success");
         else
@@ -198,13 +159,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> showArtistInfo(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:artist_info;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         if (response.get("type").equals("artist_info_response") && response.get("status").equals("found")) {
             query.addAll(response.values());
             query.remove("artist_info_response");
@@ -225,13 +180,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> showAlbumInfo(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:album_info;name:" + input);
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         HashMap<String, String> response = listener.getMessage();
-        semaphore.release();
         if (response.get("type").equals("album_info_response") && response.get("status").equals("found")) {
             query.addAll(response.values());
             query.remove("album_info_response");
