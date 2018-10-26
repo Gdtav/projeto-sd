@@ -182,13 +182,12 @@ public class MulticastServer extends Thread {
                 result += "status:found";
                 int name = 0;
                 while(rn.next()) {
-                    result += "name_" + (name++) + ":" + rs.getString(1);
+                    result += ";name_" + (name++) + ":" + rs.getString(1);
                 }
             }
             else {
                 result += "status:not_found";
             }
-            
                 send(result); 
         } catch (SQLException ex) {
             Logger lgr = Logger.getLogger(MulticastServer.class.getName());
@@ -197,7 +196,34 @@ public class MulticastServer extends Thread {
     }
     
     public void artistInfo(String art_name) {
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
 
+            String query = "SELECT * FROM artists WHERE name = '" + art_name + "'";
+            System.out.println("Query: " + query);
+            
+            ResultSet rs = st.executeQuery(query);
+            String result = "type:artist_info_response;";
+            int rows = countRows(rs);
+            if(rows > 0) {
+                rs.next();
+                result += "status:found;name:" + art_name + "activity_start:" + rs.getString(3) + "activity_end:" + rs.getString(4) + "description:" + rs.getString(5);
+
+                query = "SELECT * FROM albums WHERE Artists_idArtists = '" + rs.getString(1) + "' ORDER BY release_date desc";
+                rs = st.executeQuery(query);
+
+                int album = 0;
+                while(rn.next()) {
+                    result += ";album_" + (album++) + ":" + rs.getString(2) + "album_release_1:" + rs.getString(3);
+                }
+            }
+            else {
+                result += "status:not_found";
+            }
+                send(result); 
+        } catch (SQLException ex) {
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }        
     }
     
     public void albumFromArtistSearch(String art_name) {
