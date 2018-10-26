@@ -1,69 +1,66 @@
-package dropmusic.server;
-
-import dropmusic.DropMusic;
-import dropmusic.MulticastListener;
+package dropmusic;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
-import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
 public class Server extends UnicastRemoteObject implements DropMusic {
 
-    private static String MULTICAST_ADDRESS = "224.0.224.0";
-    private static int PORT = 4321;
-    private static MulticastSocket socket;
-    private static Semaphore semaphore = new Semaphore(1);
-    private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT, semaphore);
+    private String MULTICAST_ADDRESS;
+    private int PORT;
+    private Semaphore semaphore;
+    private MulticastListener listener;
 
-
-
-    static {
-        try {
-            socket = new MulticastSocket();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Server() throws RemoteException {
+    Server(String multicast_address, int port, Semaphore semaphore, MulticastListener listener) throws RemoteException {
         super();
+        MULTICAST_ADDRESS = multicast_address;
+        PORT = port;
+        this.semaphore = semaphore;
+        this.listener = listener;
     }
 
-    public static void main(String[] args) {
-        try {
-            Server server = new Server();
-            Registry registry = LocateRegistry.createRegistry(7000);
-            registry.bind("dropmusic", server);
-            listener.start();
-        } catch (RemoteException | AlreadyBoundException e) {
-            e.printStackTrace();
-        }
+    public String getMULTICAST_ADDRESS() {
+        return MULTICAST_ADDRESS;
     }
 
+    public void setMULTICAST_ADDRESS(String MULTICAST_ADDRESS) {
+        this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
+    }
+
+    public int getPORT() {
+        return PORT;
+    }
+
+    public void setPORT(int PORT) {
+        this.PORT = PORT;
+    }
 
     private void send(String message) {
-        byte[] buffer = message.getBytes();
-        InetAddress group = null;
         try {
-            group = InetAddress.getByName(MULTICAST_ADDRESS);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, PORT);
-        try {
-            socket.send(packet);
+            MulticastSocket socket = new MulticastSocket();
+            byte[] buffer = message.getBytes();
+            InetAddress group = null;
+            try {
+                group = InetAddress.getByName(MULTICAST_ADDRESS);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, PORT);
+            try {
+                socket.send(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -112,6 +109,11 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public void artistSearch(String input) {
         send("type:artist_search;name:" + input);
         HashMap<String, String> response = listener.getMessage();
+        int i = 0;
+        if (response.get("type").equals("artist_search_response") && response.get("status").equals("found"))
+            while (response.getOrDefault("notification_" + i, null) != null) {
+
+            }
     }
 
     @Override
