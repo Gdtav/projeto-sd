@@ -9,6 +9,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -65,15 +66,24 @@ public class Client implements Remote {
                         username = scanner.next();
                         System.out.println("Please insert password:");
                         password = scanner.next();
-                        client.status = client.server.logonUser(username, password);
+                        ArrayList<String> res = client.server.logonUser(username, password);
+                        client.status[0] = res.get(0).equals("true");
+                        client.status[1] = res.get(1).equals("true");
                         if (client.status[0]) {
+                            if(res.size()>2)
+                                System.out.println("\nYou Received the following notifications while you were offline:");
+                            for (int i = 2; i < res.size(); i++) {
+                                System.out.println(res.get(i));
+                            }
                             client.mainMenu(client.status[1]);
                         } else {
                             System.out.println("invalid login. Please retry with a different username/password combination.");
                         }
                         break;
                     case 3:
-                        return;
+                        System.exit(0);
+                    default:
+                        System.out.println("Enter one of the presented options");
                 }
             }
         } catch (RemoteException | NotBoundException e) {
@@ -86,7 +96,7 @@ public class Client implements Remote {
         int option;
         while (true) {
             if (editor) {
-                System.out.println("Please select what you want to do:");
+                System.out.println("\nPlease select what you want to do:");
                 System.out.println("1 - Search");
                 System.out.println("2 - Transfer music");
                 System.out.println("3 - Edit information");
@@ -116,6 +126,8 @@ public class Client implements Remote {
                         }
                     case 5:
                         return;
+                    default:
+                        System.out.println("Enter one of the presented options");
                 }
             } else {
                 System.out.println("Please select what you want to do:");
@@ -131,7 +143,9 @@ public class Client implements Remote {
                         connectTCP(scanner);
                         break;
                     case 3:
-                        break;
+                        return;
+                    default:
+                        System.out.println("Enter one of the presented options");
                 }
             }
         }
@@ -163,6 +177,8 @@ public class Client implements Remote {
                 break;
             case 4:
                 break;
+            default:
+                System.out.println("Enter one of the presented options");
         }
     }
 
@@ -262,6 +278,8 @@ public class Client implements Remote {
                 break;
             case 3:
                 break;
+            default:
+                System.out.println("Enter one of the presented options");
         }
     }
 

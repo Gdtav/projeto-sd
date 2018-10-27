@@ -9,7 +9,7 @@ interface DropMusic extends Remote {
 
     void register(String username, String password) throws RemoteException;
 
-    boolean[] logonUser(String username, String password) throws RemoteException;
+    ArrayList<String> logonUser(String username, String password) throws RemoteException;
 
     ArrayList<String> artistSearch(String input) throws RemoteException;
 

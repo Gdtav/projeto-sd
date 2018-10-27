@@ -61,8 +61,8 @@ public class Server extends UnicastRemoteObject implements DropMusic {
 
 
     @Override
-    public boolean[] logonUser(String username, String password) {
-        boolean[] res = new boolean[2];
+    public ArrayList<String> logonUser(String username, String password) {
+        ArrayList<String> res = new ArrayList<>();
         send("type:login_request;user:" + username + ";password:" + password);
         HashMap<String, String> response = new HashMap<>();
         response = listener.getMessage("type","login_auth");
@@ -70,13 +70,18 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         if (!response.isEmpty()) {
             if (response.get("status").equals("granted")) {
                 System.out.println("Login succeded");
+                res.add("true");
+                if(response.get("editor").equals("true"))
+                    res.add("true");
+                else
+                    res.add("false");
                 if (response.get("notifications").equals("true"))
                     while (response.getOrDefault("notification_" + i, null) != null) {
+                        res.add(response.get("notification_" + i));
                         System.out.println(response.get("notification_" + i));
                         i++;
                     }
-                res[0] = true;
-                res[1] = response.get("editor").equals("true");
+
                 return res;
             } else {
                 System.out.println("Login failed. Please try again.");
@@ -205,7 +210,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     @Override
     public ArrayList<String> showAlbumInfo(String input) {
         ArrayList<String> query = new ArrayList<>();
-        send("type:album_info;name:" + input);
+        send("type:album_info;album_name:" + input);
         HashMap<String, String> response = listener.getMessage("type","album_info_response");
         if (!response.isEmpty()) {
             if (response.get("status").equals("found")) {
