@@ -1,3 +1,15 @@
+/**
+ * DROPMUSIC
+ * RMI Client
+ * This Client interfaces with the user through the command line (A Web Interface is to be implemented),
+ * with navigation based through option insertion and input reading. It communicates with the RMI server located on the
+ * address requested at the beggining of the execution, which requires that both RMI servers are running on the same host.
+ * It gets a reference to the remote object's implementation of the interface and uses it to make the queries to the
+ * Multicast Server.
+ * It has a Failover thread running in the background that detects when the main server fails and quickly rebinds to the
+ * secondary server's object, thus providing zero evidence of the error to the user.
+ */
+
 package dropmusic;
 
 import java.io.File;
@@ -12,16 +24,32 @@ import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * The Client class which contains information about its own status.
+ */
 public class Client implements Remote {
 
 
+    /**
+     * The Username.
+     */
     static String username;
+
     private boolean[] status;
     private DropMusic server;
+
+    /**
+     * Instantiates a new Client.
+     */
     public Client() {
         this.status = new boolean[2];
     }
 
+    /**
+     * Main function for Client program. Here the RMI host's address is requested for remote connection
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         System.out.println("Please insert server's address:");
         String host = new Scanner(System.in).next();
@@ -81,6 +109,11 @@ public class Client implements Remote {
         }
     }
 
+    /**
+     * The Main Menu method, which is called upon successful login and is different for editors and common users.
+     * @param editor states if user has editor privileges.
+     */
+
     private void mainMenu(boolean editor) {
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -138,6 +171,12 @@ public class Client implements Remote {
 
     }
 
+
+    /**
+     * Menu for TCP connection with the dataserver.
+     * @param scanner the thread's scanner
+     */
+
     private void connectTCP(Scanner scanner) {
         System.out.println("Select an option:");
         System.out.println("1 - Upload file");
@@ -160,11 +199,20 @@ public class Client implements Remote {
                 downloadFile(song);
                 break;
             case 3:
+                // TODO
                 break;
             case 4:
                 break;
         }
     }
+
+
+    /**
+     * The Search Menu method, which is used for both search and editing of information.
+     *
+     * @param edition states if the menu has been called for editing info or not.
+     * @param sc passes the scanner.
+     */
 
     private void searchMenu(Scanner sc, boolean edition) {
         HashMap<Integer, String> result = new HashMap<>();
@@ -265,28 +313,47 @@ public class Client implements Remote {
         }
     }
 
+    /**
+     * Gets server.
+     */
     private DropMusic getServer() {
         return server;
     }
 
+    /**
+     * Sets server.
+     *
+     * @param server the server
+     */
     void setServer(DropMusic server) {
         this.server = server;
     }
 
-
+    /**
+     * Method for uploading files to dataserver
+     * @implNote not implemented
+     * @param filepath is local file path
+     * @param song is song name
+     */
     private void uploadFile(String filepath, String song) {
         try {
             Socket socket = new Socket(server.getIP(), 7001);
             FileOutputStream fos = (FileOutputStream) socket.getOutputStream();
             File file = new File(filepath);
+            // TODO
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Method for uploading files to dataserver
+     * @implNote not implemented
+     * @param song is song name
+     */
 
     private void downloadFile(String song) {
-
+        // TODO
     }
 }

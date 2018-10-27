@@ -4,6 +4,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+/**
+ * This class is a Thread running in the Client's background which provides failover support in case
+ * the RMI Server goes down, rebinding to the secondary server's registry.
+ */
 public class Failover extends Thread {
 
     private DropMusic stub;
@@ -11,6 +15,11 @@ public class Failover extends Thread {
     private int port;
     private Client client;
 
+    /**
+     * Gets the Interface Implementation reference.
+     *
+     * @return the stub
+     */
     DropMusic getStub() {
         return stub;
     }
@@ -19,6 +28,14 @@ public class Failover extends Thread {
         this.stub = stub;
     }
 
+    /**
+     * Instantiates a new Failover thread.
+     *
+     * @param stub   the stub
+     * @param host   the host
+     * @param port   the port
+     * @param client the client
+     */
     Failover(DropMusic stub, String host, int port, Client client) {
         this.stub = stub;
         this.host = host;
@@ -41,10 +58,20 @@ public class Failover extends Thread {
         }
     }
 
+    /**
+     * Gets client.
+     *
+     * @return the client
+     */
     public Client getClient() {
         return client;
     }
 
+    /**
+     * Sets client.
+     *
+     * @param client the client
+     */
     public void setClient(Client client) {
         this.client = client;
     }
