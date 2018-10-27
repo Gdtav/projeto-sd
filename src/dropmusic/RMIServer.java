@@ -25,7 +25,6 @@ public class RMIServer {
                 Registry registry = LocateRegistry.createRegistry(5000);
                 registry.rebind("dropmusic", server);
                 System.out.println("Main server alive");
-                listener.start();
             } catch (RemoteException e1) {
                 e1.printStackTrace();
             }

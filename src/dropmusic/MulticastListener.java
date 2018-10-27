@@ -6,51 +6,45 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.HashMap;
 
-public class MulticastListener extends Thread {
+public class MulticastListener {
     private String MULTICAST_ADDRESS;
     private int PORT;
-
-    private void setMessage(HashMap<String, String> message) {
-        this.message = message;
-    }
-
-    private HashMap<String, String> message;
 
     MulticastListener(String MULTICAST_ADDRESS, int PORT) {
         super();
         this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
         this.PORT = PORT;
-        this.message = new HashMap<>();
     }
 
-    @Override
-    public void run() {
+    HashMap<String, String> getMessage(String query, String expected) {
+        HashMap<String, String> reply = new HashMap<>();
         try (MulticastSocket multicastSocket = new MulticastSocket(PORT)) {
             // create socket and bind it
             InetAddress group = InetAddress.getByName(MULTICAST_ADDRESS);
             multicastSocket.joinGroup(group);
-            while (true) {
+            long start = System.currentTimeMillis();
+            while ((System.currentTimeMillis()-start)/1000F < 2.5) {
                 byte[] buffer = new byte[256];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 multicastSocket.receive(packet);
                 System.out.println("Received packet from " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + " with message:");
                 String message = new String(packet.getData(), 0, packet.getLength());
-                setMessage(createMap(message));
+                reply = createMap(message);
                 System.out.println(message);
+               
+                if(reply.get(query).equals(expected) || (reply.containsKey(query) && expected.equals(" "))) {
+                    return reply;
+                }
+                else{
+                    continue;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    HashMap<String, String> getMessage() {
-        if(!message.isEmpty()) {
-            HashMap<String, String> messageClone = new HashMap<String, String>(message);
-            message.clear();
-            return messageClone;
-        }
-        return message;
-    }
 
     private HashMap<String, String> createMap(String buffer) {
         try {

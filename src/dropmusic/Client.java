@@ -151,13 +151,13 @@ public class Client implements Remote {
                 try {
                     for (String artist : server.artistSearch(input)) {
                         System.out.println(i + " - " + artist);
-                        i++;
                         result.put(i, artist);
+                        i++;
                     }
                     System.out.println("Insert desired artist number:");
                     option = sc.nextInt();
                     if (edition) {
-                        server.editArtistInfo(result.get(option));
+                        //server.editArtistInfo(result.get(option));
                     } else {
                         System.out.println(server.showArtistInfo(result.get(option)).toString());
                     }
@@ -173,13 +173,13 @@ public class Client implements Remote {
                 try {
                     for (String album : server.albumSearch(input)) {
                         System.out.println(i + " - " + album);
-                        i++;
                         result.put(i, album);
+                        i++;
                     }
                     System.out.println("Insert desired album number:");
                     option = sc.nextInt();
                     if (edition) {
-                        server.editAlbumInfo(result.get(option));
+                        //server.editAlbumInfo(result.get(option));
                     } else {
                         System.out.println(server.showAlbumInfo(result.get(option)).toString());
                     }
