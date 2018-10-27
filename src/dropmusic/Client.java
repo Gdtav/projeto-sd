@@ -73,7 +73,6 @@ public class Client implements Remote {
             }
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
-
         }
     }
 
@@ -132,6 +131,7 @@ public class Client implements Remote {
             }
             scanner.close();
         }
+
     }
 
     private void connectTCP() {
@@ -156,8 +156,8 @@ public class Client implements Remote {
                 try {
                     for (String artist : server.artistSearch(input)) {
                         System.out.println(i + " - " + artist);
-                        i++;
                         result.put(i, artist);
+                        i++;
                     }
                     System.out.println("Insert desired artist number:");
                     option = sc.nextInt();
@@ -194,8 +194,8 @@ public class Client implements Remote {
                 try {
                     for (String album : server.albumSearch(input)) {
                         System.out.println(i + " - " + album);
-                        i++;
                         result.put(i, album);
+                        i++;
                     }
                     System.out.println("Insert desired album number:");
                     option = sc.nextInt();

@@ -24,7 +24,7 @@ public class MulticastServer extends Thread {
     private static int PORT = 4321;
     private static MulticastSocket socket;
     private static Semaphore semaphore = new Semaphore(1);
-    private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT,semaphore);
+    private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
     String url = "jdbc:mysql://localhost:3306/dropmusic?autoReconnect=true&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&serverTimezone=GMT&useSSL=false";
     String sql_user = "pmsilva";
     String sql_password = "password";
@@ -41,8 +41,6 @@ public class MulticastServer extends Thread {
         MulticastServer server = new MulticastServer();
         server.start();
         System.out.println("Multicast Server Online");
-        listener.start();
-        System.out.println("MulticastListener started");
     }
 
     private MulticastServer() {
@@ -51,17 +49,14 @@ public class MulticastServer extends Thread {
 
     public void run() {
         System.out.println(this.getName() + " running...");
-        HashMap<String, String> response;
+        HashMap<String, String> response = new HashMap<>();
         while(true) {
-            try {
-                semaphore.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            response = listener.getMessage();
-            semaphore.release();
+            response = listener.getMessage("type"," ");
+            if(response.isEmpty())
+                continue;
 
             if (response.getOrDefault("type", "").equals("register")) {
+                System.out.println("I here");
                 register(response.getOrDefault("user", " "),response.getOrDefault("password", " "));
             }
             else if(response.getOrDefault("type", " ").equals("login_request")) {
@@ -118,8 +113,8 @@ public class MulticastServer extends Thread {
 
             send("type:register_response;status:successful"); 
         } catch (SQLException ex) {
-            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+            /*Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);*/
         }
     }
 
@@ -164,17 +159,11 @@ public class MulticastServer extends Thread {
 
     public void artistSearch(String art_name) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
-            String[]split_string = art_name.split(" ");
-
-            String query = "SELECT name FROM artists WHERE (name like '%"+ split_string[0] +"%' LIMIT 7)";
-            for(int i=1;i<split_string.length;i++) {
-                query += " OR (name like '%" + split_string[i] + "%'";
-            }
-            query += " ORDER BY name ASC";
+            String query = "SELECT name FROM artists WHERE (name like '%"+ art_name +"%') ORDER BY name ASC LIMIT 7";
             System.out.println("Query: " + query);
             
             ResultSet rs = st.executeQuery(query);
-            String result = "type:artist_search_reponse;";
+            String result = "type:artist_search_response;";
             int rows = countRows(rs);
             if(rows > 0) {
                 result += "status:found";
@@ -186,7 +175,7 @@ public class MulticastServer extends Thread {
             else {
                 result += "status:not_found";
             }
-                send(result); 
+            send(result); 
         } catch (SQLException ex) {
             Logger lgr = Logger.getLogger(MulticastServer.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
@@ -195,9 +184,7 @@ public class MulticastServer extends Thread {
     
     public void artistInfo(String art_name) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
-
             String query = "SELECT * FROM artists WHERE name = '" + art_name + "'";
-            System.out.println("Query: " + query);
             
             ResultSet rs = st.executeQuery(query);
             String result = "type:artist_info_response;";
@@ -217,7 +204,7 @@ public class MulticastServer extends Thread {
             else {
                 result += "status:not_found";
             }
-                send(result); 
+            send(result); 
         } catch (SQLException ex) {
             Logger lgr = Logger.getLogger(MulticastServer.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
@@ -225,15 +212,82 @@ public class MulticastServer extends Thread {
     }
     
     public void albumFromArtistSearch(String art_name) {
-
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
+            String query = "SELECT idUserts FROM artists WHERE name = '" + art_name + "'";
+            
+            ResultSet rs = st.executeQuery(query);
+            String result = "type:artist_album_response;";
+            int rows = countRows(rs);
+            if(rows > 0) {
+                rs.next();
+                query = "SELECT name FROM albums WHERE Artists_idArtists = '" + rs.getString(1) + "' ORDER BY release_date desc";
+                rs = st.executeQuery(query);
+                int rows2 = countRows(rs);
+                int album = 0;
+                if(rows2 > 0) {
+                    result += "status:found";
+                    while(rs.next()) {
+                        result += ";name_" + (album++) + ":" + rs.getString(1);
+                    }
+                }
+                else {
+                    result += "status:not_found";
+                }
+            }
+            else {
+                result += "status:not_found";
+            }
+            send(result); 
+        } catch (SQLException ex) {
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }  
     }
 
     public void albumSearch(String alb_name) {
-
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {            
+            String result = "type:artist_album_response;";
+            String query = "SELECT name FROM albums WHERE name LIKE '%"+ alb_name +"%'  ORDER BY name asc";
+            ResultSet rs = st.executeQuery(query);
+            int rows = countRows(rs);
+            int album = 0;
+            if(rows > 0) {
+                result += "status:found";
+                while(rs.next()) {
+                    result += ";name_" + (album++) + ":" + rs.getString(1);
+                }
+            }
+            else {
+                result += "status:not_found";
+            }
+            send(result); 
+        } catch (SQLException ex) {
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }  
     }    
 
     public void albumInfo(String art_name, String alb_name) {
-
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {            
+            String result = "type:artist_album_response;";
+            String query = "SELECT name FROM albums WHERE name LIKE '%"+ alb_name +"%'  ORDER BY name asc";
+            ResultSet rs = st.executeQuery(query);
+            int rows = countRows(rs);
+            int album = 0;
+            if(rows > 0) {
+                result += "status:found";
+                while(rs.next()) {
+                    result += ";name_" + (album++) + ":" + rs.getString(1);
+                }
+            }
+            else {
+                result += "status:not_found";
+            }
+            send(result); 
+        } catch (SQLException ex) {
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        } 
     }
 
     public void reviewAlbum(String art_name, String alb_name, int review, String desc) {
