@@ -23,11 +23,11 @@ interface DropMusic extends Remote {
 
     void isAlive() throws RemoteException;
 
-    void editArtistInfo(HashMap<String, String> input);
+    void editArtistInfo(HashMap<String, String> input) throws RemoteException;
 
-    ArrayList<String> showArtistInfo(String input);
+    ArrayList<String> showArtistInfo(String input) throws RemoteException;
 
-    void editAlbumInfo(HashMap<String, String> input);
+    void editAlbumInfo(HashMap<String, String> input) throws RemoteException;
 
-    ArrayList<String> showAlbumInfo(String input);
+    ArrayList<String> showAlbumInfo(String input) throws RemoteException;
 }

@@ -24,6 +24,7 @@ public class MulticastListener {
             multicastSocket.joinGroup(group);
             long start = System.currentTimeMillis();
             while ((System.currentTimeMillis()-start)/1000F < 2.5) {
+                System.out.println("-------------In the Listener Cycle -------------");
                 byte[] buffer = new byte[256];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 multicastSocket.receive(packet);
@@ -42,7 +43,7 @@ public class MulticastListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return reply;
     }
 
 

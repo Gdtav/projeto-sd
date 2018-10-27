@@ -23,7 +23,6 @@ public class MulticastServer extends Thread {
     private static String MULTICAST_ADDRESS = "224.0.224.0";
     private static int PORT = 4321;
     private static MulticastSocket socket;
-    private static Semaphore semaphore = new Semaphore(1);
     private static MulticastListener listener = new MulticastListener(MULTICAST_ADDRESS, PORT);
     String url = "jdbc:mysql://localhost:3306/dropmusic?autoReconnect=true&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&serverTimezone=GMT&useSSL=false";
     String sql_user = "pmsilva";
@@ -294,6 +293,23 @@ public class MulticastServer extends Thread {
 
     }
 
+    public void makeEditor(String user) {
+        String result = "type:make_editor_response;";
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
+            String query = "UPDATE users SET editor = 1 WHERE name = '" + user + "'";
+
+            if(st.executeUpdate(query) == 1)
+                result += "status:success";
+            else
+                result += "status:not_found";
+            send(result); 
+        } catch (SQLException ex) {
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+
+        }  
+        send(result);
+    }
     public int countRows(ResultSet rs) throws SQLException {
         int rows = 0;
         rs.last();
