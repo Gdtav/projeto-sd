@@ -220,7 +220,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
 
-    String getIP() {
+    public String getIP() {
         send("type:ip_request");
         HashMap<String, String> response = listener.getMessage("type", "ip_request_response");
         return response.get("address");

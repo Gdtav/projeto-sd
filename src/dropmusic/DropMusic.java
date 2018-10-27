@@ -31,5 +31,5 @@ interface DropMusic extends Remote {
 
     ArrayList<String> showAlbumInfo(String input) throws RemoteException;
 
-    String getIP();
+    String getIP() throws RemoteException;
 }
