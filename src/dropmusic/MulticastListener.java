@@ -23,7 +23,7 @@ public class MulticastListener {
             InetAddress group = InetAddress.getByName(MULTICAST_ADDRESS);
             multicastSocket.joinGroup(group);
             long start = System.currentTimeMillis();
-            while ((System.currentTimeMillis()-start)/1000F < 2.5) {
+            while (true) {
                 System.out.println("-------------In the Listener Cycle -------------");
                 byte[] buffer = new byte[256];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
