@@ -9,6 +9,8 @@ Como correr o programa:
 Instalar MySQL na máquina
 Instalar driver MySQL - JDBC - jConnect
 Importar a base de dados do script SQL (db_tests.sql) contido na pasta
+Para correr os jar files:
+    $ java -jar <filename.jar>
 Correr dataserver.jar
 Correr server.jar
 abrir terminal e anotar endereço IP da máquina
