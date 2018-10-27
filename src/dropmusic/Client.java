@@ -1,5 +1,9 @@
 package dropmusic;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -10,6 +14,7 @@ import java.util.Scanner;
 
 public class Client implements Remote {
 
+    public static String username;
     private boolean[] status;
     private DropMusic server;
     public Client() {
@@ -20,8 +25,9 @@ public class Client implements Remote {
         System.out.println("Please insert server's address:");
         String host = new Scanner(System.in).next();
         Client client = new Client();
-        String username, password;
+        String password;
         int port = 5000;
+        Scanner scanner = new Scanner(System.in);
         try {
             Registry registry = LocateRegistry.getRegistry(host, port);
             client.setServer((DropMusic) registry.lookup("dropmusic"));
@@ -38,12 +44,11 @@ public class Client implements Remote {
                 System.out.println("1 - Register");
                 System.out.println("2 - Logon");
                 System.out.println("3 - Exit");
-                Scanner scanner = new Scanner(System.in);
                 int option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        System.out.println("Please insert desired username:");
-                        username = scanner.next();
+                        System.out.println("Please insert desired client.username:");
+                        Client.username = scanner.next();
                         System.out.println("Please insert password:");
                         password = scanner.next();
                         System.out.println("Repeat password:");
@@ -55,7 +60,7 @@ public class Client implements Remote {
                         client.server.register(username, password);
                         break;
                     case 2:
-                        System.out.println("Insert username");
+                        System.out.println("Insert client.username");
                         username = scanner.next();
                         System.out.println("Please insert password:");
                         password = scanner.next();
@@ -63,13 +68,12 @@ public class Client implements Remote {
                         if (client.status[0]) {
                             client.mainMenu(client.status[1]);
                         } else {
-                            System.out.println("invalid login. Please retry with a different username/password combination.");
+                            System.out.println("invalid login. Please retry with a different client.username/password combination.");
                         }
                         break;
                     case 3:
                         return;
                 }
-                scanner.close();
             }
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
@@ -90,16 +94,16 @@ public class Client implements Remote {
                 option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        searchMenu(scanner, false);
+                        searchMenu(scanner, false, Client.username);
                         break;
                     case 2:
-                        connectTCP();
+                        connectTCP(scanner);
                         break;
                     case 3:
-                        searchMenu(scanner, true);
+                        searchMenu(scanner, true, Client.username);
                         break;
                     case 4:
-                        System.out.println("Please insert username to become editor:");
+                        System.out.println("Please insert client.username to become editor:");
                         try {
                             if (server.makeEditor(scanner.next()))
                                 System.out.println("Upgrade to editor succeeded.");
@@ -120,25 +124,48 @@ public class Client implements Remote {
                 option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        searchMenu(scanner, false);
+                        searchMenu(scanner, false, Client.username);
                         break;
                     case 2:
-                        connectTCP();
+                        connectTCP(scanner);
                         break;
                     case 3:
                         break;
                 }
             }
-            scanner.close();
         }
 
     }
 
-    private void connectTCP() {
-
+    private void connectTCP(Scanner scanner) {
+        System.out.println("Select an option:");
+        System.out.println("1 - Upload file");
+        System.out.println("2 - Download file");
+        System.out.println("3 - Share file");
+        System.out.println("4 - Return");
+        int option = scanner.nextInt();
+        String song;
+        switch (option) {
+            case 1:
+                System.out.println("Insert song name:");
+                song = scanner.next();
+                System.out.println("Insert filepath to upload:");
+                String filepath = scanner.next();
+                uploadFile(filepath, song);
+                break;
+            case 2:
+                System.out.println("Insert song name to download:");
+                song = scanner.next();
+                downloadFile(song);
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
     }
 
-    private void searchMenu(Scanner sc, boolean edition) {
+    private void searchMenu(Scanner sc, boolean edition, String username) {
         HashMap<Integer, String> result = new HashMap<>();
         HashMap<String, String> edit = new HashMap<>();
         int i;
@@ -221,7 +248,7 @@ public class Client implements Remote {
                             int rate = sc.nextInt();
                             System.out.println("Please write review:");
                             input = sc.next();
-                            if (server.reviewAlbum(rate, input, album)) {
+                            if (server.reviewAlbum(rate, input, album, dropmusic.Client.username)) {
                                 System.out.println("Review successfully published.");
                             } else {
                                 System.out.println("Review failed.");
@@ -243,5 +270,22 @@ public class Client implements Remote {
 
     void setServer(DropMusic server) {
         this.server = server;
+    }
+
+
+    public void uploadFile(String filepath, String song) {
+        try {
+            Socket socket = new Socket(server.getIP(), 7001);
+            FileOutputStream fos = (FileOutputStream) socket.getOutputStream();
+            File file = new File(filepath);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void downloadFile(String song) {
+
     }
 }

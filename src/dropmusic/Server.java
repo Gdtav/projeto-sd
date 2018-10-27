@@ -148,9 +148,9 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public boolean reviewAlbum(int grade, String review, String album) {
+    public boolean reviewAlbum(int grade, String review, String album, String username) {
         HashMap<String, String> response;
-        send("type:album_review;artist_name:" + ";album_name:" + album + ";review:" + grade + ";review_desc:" + review);
+        send("type:album_review;username:" + username + ";album_name:" + album + ";review:" + grade + ";review_desc:" + review);
         if ((response = listener.getMessage("type", "album_review_response")) != null) {
             return response.get("status").equals("successful");
         }
@@ -217,5 +217,12 @@ public class Server extends UnicastRemoteObject implements DropMusic {
             }
         }
         return query;
+    }
+
+
+    String getIP() {
+        send("type:ip_request");
+        HashMap<String, String> response = listener.getMessage("type", "ip_request_response");
+        return response.get("address");
     }
 }

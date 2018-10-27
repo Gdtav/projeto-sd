@@ -19,7 +19,7 @@ interface DropMusic extends Remote {
 
     boolean makeEditor(String input) throws RemoteException;
 
-    boolean reviewAlbum(int grade, String review, String album) throws RemoteException;
+    boolean reviewAlbum(int grade, String review, String album, String username) throws RemoteException;
 
     void isAlive() throws RemoteException;
 
@@ -30,4 +30,6 @@ interface DropMusic extends Remote {
     void editAlbumInfo(HashMap<String, String> input) throws RemoteException;
 
     ArrayList<String> showAlbumInfo(String input) throws RemoteException;
+
+    String getIP();
 }
