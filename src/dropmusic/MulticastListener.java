@@ -6,16 +6,33 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.HashMap;
 
-public class MulticastListener {
+/**
+ * The type Multicast listener. It is a thread that runs in the background receiving all multicast messages and mapping
+ * them to HashMaps for easier manipulation.
+ */
+class MulticastListener {
     private String MULTICAST_ADDRESS;
     private int PORT;
 
+    /**
+     * Instantiates a new Multicast listener.
+     *
+     * @param MULTICAST_ADDRESS the multicast address
+     * @param PORT              the port
+     */
     MulticastListener(String MULTICAST_ADDRESS, int PORT) {
         super();
         this.MULTICAST_ADDRESS = MULTICAST_ADDRESS;
         this.PORT = PORT;
     }
 
+    /**
+     * Reads Multicast message and transforms it into an Hashmap.
+     *
+     * @param query    the query
+     * @param expected the expected
+     * @return the reply's Hashmap
+     */
     HashMap<String, String> getMessage(String query, String expected) {
         HashMap<String, String> reply = new HashMap<>();
         try (MulticastSocket multicastSocket = new MulticastSocket(PORT)) {
@@ -32,11 +49,10 @@ public class MulticastListener {
                 String message = new String(packet.getData(), 0, packet.getLength());
                 reply = createMap(message);
                 System.out.println(message);
-               
+
                 if(reply.get(query).equals(expected) || (reply.containsKey(query) && expected.equals(" "))) {
                     return reply;
-                }
-                else{
+                } else{
                     continue;
                 }
             }
@@ -46,7 +62,12 @@ public class MulticastListener {
         return reply;
     }
 
-
+    /**
+     * Auxiliary method to turn a protocol's string into a HashMap
+     *
+     * @param buffer the message received from the listener
+     * @return the HashMap which contains the message read by the Listener
+     */
     private HashMap<String, String> createMap(String buffer) {
         try {
             HashMap<String, String> message = new HashMap<>();
