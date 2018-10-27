@@ -124,3 +124,13 @@ If the review was made successfully:
 If there was an error creating it:
 
 -   `type:album_review_response;status:unsuccessful`
+
+## Edition
+
+If the user whishes to edit an artist:
+
+-   `type:artist_edit;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album_1:<album_name1>;album_release_1:<album_release_date1>;album_2:<album_name2>;album_release_2:<album_release_date2> ...`
+
+If the user whishes to edit an album:
+
+-   `type:album_edit;artist_name:<artist_name>;album_name:<album_name>;album_date:<album_date>;song_1:<song1>;song_2:<song2>;...`

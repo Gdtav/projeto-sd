@@ -27,13 +27,13 @@ public class Client implements Remote {
             client.setServer((DropMusic) registry.lookup("dropmusic"));
             Failover failover = new Failover(client.getServer(), host, port, client);
             failover.start();
+            System.out.println("  ____                  __  __           _      \n" +
+                    " |  _ \\ _ __ ___  _ __ |  \\/  |_   _ ___(_) ___ \n" +
+                    " | | | | '__/ _ \\| '_ \\| |\\/| | | | / __| |/ __|\n" +
+                    " | |_| | | | (_) | |_) | |  | | |_| \\__ \\ | (__ \n" +
+                    " |____/|_|  \\___/| .__/|_|  |_|\\__,_|___/_|\\___|\n" +
+                    "                 |_|                            ");
             while (true) {
-                System.out.println("  ____                  __  __           _      \n" +
-                        " |  _ \\ _ __ ___  _ __ |  \\/  |_   _ ___(_) ___ \n" +
-                        " | | | | '__/ _ \\| '_ \\| |\\/| | | | / __| |/ __|\n" +
-                        " | |_| | | | (_) | |_) | |  | | |_| \\__ \\ | (__ \n" +
-                        " |____/|_|  \\___/| .__/|_|  |_|\\__,_|___/_|\\___|\n" +
-                        "                 |_|                            ");
                 System.out.println("Please select an option: (insert the corresponding number and press [enter]");
                 System.out.println("1 - Register");
                 System.out.println("2 - Logon");
@@ -69,65 +69,69 @@ public class Client implements Remote {
                     case 3:
                         return;
                 }
+                scanner.close();
             }
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
+
         }
     }
 
     private void mainMenu(boolean editor) {
         Scanner scanner = new Scanner(System.in);
         int option;
-        if (editor) {
-            System.out.println("Please select what you want to do:");
-            System.out.println("1 - Search");
-            System.out.println("2 - Transfer music");
-            System.out.println("3 - Edit information");
-            System.out.println("4 - Manage editors");
-            System.out.println("5 - Exit");
-            option = scanner.nextInt();
-            switch (option) {
-                case 1:
-                    searchMenu(scanner, false);
-                    break;
-                case 2:
-                    connectTCP();
-                    break;
-                case 3:
-                    searchMenu(scanner, true);
-                    break;
-                case 4:
-                    System.out.println("Please insert username to become editor:");
-                    try {
-                        if (server.makeEditor(scanner.next()))
-                            System.out.println("Upgrade to editor succeeded.");
-                        else
-                            System.out.println("Failed to upgrade to editor.");
+        while (true) {
+            if (editor) {
+                System.out.println("Please select what you want to do:");
+                System.out.println("1 - Search");
+                System.out.println("2 - Transfer music");
+                System.out.println("3 - Edit information");
+                System.out.println("4 - Manage editors");
+                System.out.println("5 - Exit");
+                option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        searchMenu(scanner, false);
                         break;
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                case 5:
-                    break;
+                    case 2:
+                        connectTCP();
+                        break;
+                    case 3:
+                        searchMenu(scanner, true);
+                        break;
+                    case 4:
+                        System.out.println("Please insert username to become editor:");
+                        try {
+                            if (server.makeEditor(scanner.next()))
+                                System.out.println("Upgrade to editor succeeded.");
+                            else
+                                System.out.println("Failed to upgrade to editor.");
+                            break;
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    case 5:
+                        return;
+                }
+            } else {
+                System.out.println("Please select what you want to do:");
+                System.out.println("1 - Search");
+                System.out.println("2 - Transfer music");
+                System.out.println("3 - Exit");
+                option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        searchMenu(scanner, false);
+                        break;
+                    case 2:
+                        connectTCP();
+                        break;
+                    case 3:
+                        break;
+                }
             }
-        } else {
-            System.out.println("Please select what you want to do:");
-            System.out.println("1 - Search");
-            System.out.println("2 - Transfer music");
-            System.out.println("3 - Exit");
-            option = scanner.nextInt();
-            switch (option) {
-                case 1:
-                    searchMenu(scanner, false);
-                    break;
-                case 2:
-                    connectTCP();
-                    break;
-                case 3:
-                    break;
-            }
+            scanner.close();
         }
-
     }
 
     private void connectTCP() {
@@ -136,6 +140,7 @@ public class Client implements Remote {
 
     private void searchMenu(Scanner sc, boolean edition) {
         HashMap<Integer, String> result = new HashMap<>();
+        HashMap<String, String> edit = new HashMap<>();
         int i;
         System.out.println("Please select an option: (insert the corresponding number and press [enter]");
         System.out.println("1 - Search artist");
@@ -157,7 +162,23 @@ public class Client implements Remote {
                     System.out.println("Insert desired artist number:");
                     option = sc.nextInt();
                     if (edition) {
-                        server.editArtistInfo(result.get(option));
+                        System.out.println("new name:");
+                        edit.put("name", sc.next());
+                        System.out.println("new start of activity:");
+                        edit.put("activity_start", sc.next());
+                        System.out.println("new end of activity:");
+                        edit.put("activity_end", sc.next());
+                        System.out.println("new description:");
+                        edit.put("description", sc.next());
+                        System.out.println("How many albums:");
+                        i = sc.nextInt();
+                        for (int j = 0; j < i; j++) {
+                            System.out.println("Album name:");
+                            edit.put("album_" + j, sc.next());
+                            System.out.println("Album date:");
+                            edit.put("album_release_" + j, sc.next());
+                        }
+                        server.editArtistInfo(edit);
                     } else {
                         System.out.println(server.showArtistInfo(result.get(option)).toString());
                     }
@@ -179,9 +200,29 @@ public class Client implements Remote {
                     System.out.println("Insert desired album number:");
                     option = sc.nextInt();
                     if (edition) {
-                        server.editAlbumInfo(result.get(option));
+                        System.out.println("new artist name:");
+                        edit.put("artist_name", sc.next());
+                        System.out.println("new album name:");
+                        edit.put("album_name", sc.next());
+                        System.out.println("new album date");
+                        edit.put("album_date", sc.next());
+                        for (int j = 0; j < i; j++) {
+                            System.out.println("song name:");
+                            edit.put("song_" + j, sc.next());
+                        }
+                        server.editAlbumInfo(edit);
                     } else {
                         System.out.println(server.showAlbumInfo(result.get(option)).toString());
+                        String album = result.get(option);
+                        System.out.println("Do you wish to write an review? [y,N]");
+                        input = sc.next();
+                        if (input.equals("y") || input.equals("Y")) {
+                            System.out.println("Please give rating (0-5)");
+                            int rate = sc.nextInt();
+                            System.out.println("Please write review:");
+                            input = sc.next();
+                            server.reviewAlbum(rate, input, album);
+                        }
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();

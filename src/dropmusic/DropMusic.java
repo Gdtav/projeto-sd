@@ -3,6 +3,7 @@ package dropmusic;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 interface DropMusic extends Remote {
 
@@ -18,15 +19,15 @@ interface DropMusic extends Remote {
 
     boolean makeEditor(String input) throws RemoteException;
 
-    void reviewAlbum(String review) throws RemoteException;
+    void reviewAlbum(int grade, String review, String album) throws RemoteException;
 
     void isAlive() throws RemoteException;
 
-    ArrayList<String> editArtistInfo(String input);
+    void editArtistInfo(HashMap<String, String> input);
 
     ArrayList<String> showArtistInfo(String input);
 
-    ArrayList<String> editAlbumInfo(String input);
+    void editAlbumInfo(HashMap<String, String> input);
 
     ArrayList<String> showAlbumInfo(String input);
 }
