@@ -221,7 +221,11 @@ public class Client implements Remote {
                             int rate = sc.nextInt();
                             System.out.println("Please write review:");
                             input = sc.next();
-                            server.reviewAlbum(rate, input, album);
+                            if (server.reviewAlbum(rate, input, album)) {
+                                System.out.println("Review successfully published.");
+                            } else {
+                                System.out.println("Review failed.");
+                            }
                         }
                     }
                 } catch (RemoteException e) {

@@ -140,8 +140,13 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public void reviewAlbum(String review) {
-
+    public boolean reviewAlbum(int grade, String review, String album) {
+        HashMap<String, String> response;
+        send("type:album_review;artist_name:" + ";album_name:" + album + ";review:" + grade + ";review_desc:" + review);
+        if ((response = listener.getMessage("type", "album_review_response")) != null) {
+            return response.get("status").equals("successful");
+        }
+        return false;
     }
 
     @Override
@@ -150,9 +155,15 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public ArrayList<String> editArtistInfo(String input) {
-        // TODO
-        return null;
+    public void editArtistInfo(HashMap<String, String> input) {
+        StringBuilder query = new StringBuilder("type:artist_edit;name:" + input.get("name") + ";activity_start:" + input.get("activity_start") +
+                ";activity_end:" + input.get("activity_end") + ";description:" + input.get("description") + ";");
+        for (int i = 0; input.getOrDefault("album_" + i, null) != null; i++) {
+            query.append("album_").append(i).append(":").append(input.get("album_" + i));
+            query.append("album_release_").append(i).append(":").append(input.get("album_release_" + i));
+        }
+        System.out.println(query);
+        send(query.toString());
     }
 
     @Override
@@ -171,9 +182,14 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public ArrayList<String> editAlbumInfo(String input) {
-        // TODO
-        return null;
+    public void editAlbumInfo(HashMap<String, String> input) {
+        StringBuilder query = new StringBuilder("type:album_edit;name:" + input.get("name") + ";artist_name:" + input.get("artist_name") +
+                ";album_name:" + input.get("album_name") + ";album_date:" + input.get("album_date"));
+        for (int i = 0; input.getOrDefault("album_" + i, null) != null; i++) {
+            query.append(";song_").append(i).append(":").append(input.get("song_" + i));
+        }
+        System.out.println(query);
+        send(query.toString());
     }
 
     @Override
