@@ -44,7 +44,7 @@ If the user fails to authenticate:
 
 -   `type:login_auth;status:failed`
 
-## Make Editor
+##Make Editor
 
 To make a user become an editor:
 
@@ -63,7 +63,7 @@ When the user searches for an artist:
 
 If an artist, or several, is found:
 
--   `type:artist_search_response;status:found;id_1:<artist_id1>;name_1:<artist_name1>;id_2:<artist_id2>;name_2:<artist_name2>;...`
+-   `type:artist_search_response;status:found;name_1:<artist_name1>;name_2:<artist_name2>;...`
 
 If none are found:
 
@@ -76,7 +76,7 @@ If the user wishes to see more info on the artist:
 
 If info is retrieved:
 
--   `type:artist_info_response;status:found;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album_id_1:<album_id1>;album_1:<album_name1>;album_release_1:<album_release_date1>;album_id_2:<album_id2>;album_2:<album_name2>;album_release_2:<album_release_date2> ...`
+-   `type:artist_info_response;status:found;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album_1:<album_name1>;album_release_1:<album_release_date1>;album_2:<album_name2>;album_release_2:<album_release_date2> ...`
 
 if not:
 
@@ -93,7 +93,7 @@ When the user searches for an album directly:
 
 If an album, or several, is found:
 
--   `type:album_search_response;status:found;id_1:<album_id1>;name_1:<album_name1>;id_2:<album_id2>;name_2:<album_name2>;...`
+-   `type:album_search_response;status:found;name_1:<album_name1>:name_2:<album_name2>;...`
 
 If none are found:
 
@@ -115,7 +115,7 @@ If not:
 ---
 If the user wishes to write a review:
 
--   `type:album_review;artist_id:<artist_id>;album_id:<album_id>;review:<review_score>;review_desc:<review_description>`
+-   `type:album_review;artist_name:<artist_name>;album_name:<album_name>;review:<review_score>;review_desc:<review_description>`
 
 If the review was made successfully:
 
@@ -129,8 +129,8 @@ If there was an error creating it:
 
 If the user whishes to edit an artist:
 
--   `type:artist_edit;artist_id:<artist_id>;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album_id_1:<album_id1>;album_1:<album_name1>;album_release_1:<album_release_date1>;album_id_2:<album_id2>;album_2:<album_name2>;album_release_2:<album_release_date2> ...`
+-   `type:artist_edit;name:<artist_name>;activity_start:<date1>;activity_end:<date2>;description:<description>;album_1:<album_name1>;album_release_1:<album_release_date1>;album_2:<album_name2>;album_release_2:<album_release_date2> ...`
 
 If the user whishes to edit an album:
 
--   `type:album_edit;artist_id:<artist_id>;album_id:<album_id>;album_name:<album_name>;album_date:<album_date>;song_id_1:<song_id1>;song_1:<song1>;song_id_2:<song_id2>;song_2:<song2>;...`
+-   `type:album_edit;artist_name:<artist_name>;album_name:<album_name>;album_date:<album_date>;song_1:<song1>;song_2:<song2>;...`
