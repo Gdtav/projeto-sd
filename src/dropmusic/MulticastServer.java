@@ -15,7 +15,10 @@
 package dropmusic;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.UnknownHostException;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -69,29 +72,31 @@ public class MulticastServer extends Thread {
     public void run() {
         System.out.println(this.getName() + " running...");
         HashMap<String, String> response = new HashMap<>();
-        while (true) {
-            response = listener.getMessage("type", " ");
-            if (response.isEmpty())
+        while(true) {
+            response = listener.getMessage("type"," ");
+            if(response.isEmpty())
                 continue;
 
             if (response.getOrDefault("type", "").equals("register")) {
                 System.out.println("I here");
-                register(response.getOrDefault("user", " "), response.getOrDefault("password", " "));
-            } else if (response.getOrDefault("type", " ").equals("login_request")) {
-                logonUser(response.getOrDefault("user", " "), response.getOrDefault("password", " "));
-            } else if (response.getOrDefault("type", " ").equals("artist_search")) {
+                register(response.getOrDefault("user", " "),response.getOrDefault("password", " "));
+            } else if(response.getOrDefault("type", " ").equals("login_request")) {
+                logonUser(response.getOrDefault("user", " "),response.getOrDefault("password", " "));
+            } else if(response.getOrDefault("type", " ").equals("artist_search")) {
                 artistSearch(response.getOrDefault("name", " "));
-            } else if (response.getOrDefault("type", " ").equals("artist_info")) {
+            } else if(response.getOrDefault("type", " ").equals("artist_info")) {
                 artistInfo(response.getOrDefault("name", " "));
-            } else if (response.getOrDefault("type", " ").equals("album_search_artist")) {
+            } else if(response.getOrDefault("type", " ").equals("album_search_artist")) {
                 albumFromArtistSearch(response.getOrDefault("name", " "));
-            } else if (response.getOrDefault("type", " ").equals("album_search")) {
+            } else if(response.getOrDefault("type", " ").equals("album_search")) {
                 albumSearch(response.getOrDefault("name", " "));
-            } else if (response.getOrDefault("type", " ").equals("album_info")) {
+            } else if(response.getOrDefault("type", " ").equals("album_info")) {
                 albumInfo(response.getOrDefault("artist_name", " "), response.getOrDefault("album_name", " "));
-            } else if (response.getOrDefault("type", " ").equals("album_review")) {
+            }
+            else if(response.getOrDefault("type", " ").equals("album_review")) {
                 reviewAlbum(response.getOrDefault("artist_name", " "), response.getOrDefault("album_name", " "), response.getOrDefault("username", " "), Integer.parseInt(response.getOrDefault("review", " ")), response.getOrDefault("review_desc", " "));
-            } else if (response.getOrDefault("type", " ").equals("make_editor")) {
+            }
+            else if(response.getOrDefault("type", " ").equals("make_editor")) {
                 makeEditor(response.getOrDefault("user", " "));
             } else if(response.getOrDefault("type", " ").equals("artist_edit")) {
                 artistEdit(response);
@@ -118,7 +123,7 @@ public class MulticastServer extends Thread {
 
             ResultSet rs = st.executeQuery(query);
             int first = 0;
-            if (rs.next() && rs.getInt(1) == 0)
+            if(rs.next() && rs.getInt(1) == 0)
                 first = 1;
 
             query = "INSERT INTO `Users`(idUsers,username,password,editor) VALUES (NULL, '" + username + "', SHA2('" + password + "',256), " + first + ")";
@@ -145,21 +150,21 @@ public class MulticastServer extends Thread {
 
             int rows = countRows(rs);
 
-            if (rows != 0) {
+            if(rows != 0) {
                 rs.next();
                 int idUsers = rs.getInt(1);
                 String editor = rs.getString(2);
                 response += "editor:" + "1".equals(editor);
-                query = "SELECT notification FROM notifications WHERE Users_idUsers = " + idUsers;
+                query = "SELECT notification FROM notifications WHERE Users_idUsers = " + idUsers ;
                 rs = st.executeQuery(query);
                 int rows2 = countRows(rs);
-                if (rows2 == 0) {
+                if(rows2 == 0) {
                     response += ";notifications:false";
-                } else if (rows > 0) {
+                } else if(rows > 0) {
                     response += ";notifications:true";
                     int not = 0;
-                    while (rs.next()) {
-                        response += ";notification_" + (not++) + ":" + rs.getString(1);
+                    while(rs.next()) {
+                        response += ";notification_" + (not++) + ":"+ rs.getString(1);
                     }
                     query = "DELETE FROM notifications WHERE Users_idUsers = " + idUsers;
                     st.executeUpdate(query);
@@ -181,16 +186,16 @@ public class MulticastServer extends Thread {
      */
     public void artistSearch(String art_name) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
-            String query = "SELECT name FROM artists WHERE (name like '%" + art_name + "%') ORDER BY name ASC LIMIT 7";
+            String query = "SELECT name FROM artists WHERE (name like '%"+ art_name +"%') ORDER BY name ASC LIMIT 7";
             System.out.println("Query: " + query);
 
             ResultSet rs = st.executeQuery(query);
             String result = "type:artist_search_response;";
             int rows = countRows(rs);
-            if (rows > 0) {
+            if(rows > 0) {
                 result += "status:found";
                 int name = 0;
-                while (rs.next()) {
+                while(rs.next()) {
                     result += ";name_" + (name++) + ":" + rs.getString(1);
                 }
             } else {
@@ -215,7 +220,7 @@ public class MulticastServer extends Thread {
             ResultSet rs = st.executeQuery(query);
             String result = "type:artist_info_response;";
             int rows = countRows(rs);
-            if (rows > 0) {
+            if(rows > 0) {
                 rs.next();
                 result += "status:found;name:" + art_name + ";activity_start:" + rs.getString(3) + ";activity_end:" + rs.getString(4) + ";description:" + rs.getString(5);
 
@@ -223,7 +228,7 @@ public class MulticastServer extends Thread {
                 rs = st.executeQuery(query);
 
                 int album = 0;
-                while (rs.next()) {
+                while(rs.next()) {
                     result += ";album_" + (album++) + ":" + rs.getString(2) + ";album_release_1:" + rs.getString(3);
                 }
             } else {
@@ -248,13 +253,20 @@ public class MulticastServer extends Thread {
             ResultSet rs = st.executeQuery(query);
             String result = "type:artist_album_response;";
             int rows = countRows(rs);
-            if (rows > 0) {
+            if(rows > 0) {
                 rs.next();
                 query = "SELECT name FROM albums WHERE Artists_idArtists = '" + rs.getString(1) + "' ORDER BY release_date desc";
                 rs = st.executeQuery(query);
                 int rows2 = countRows(rs);
                 int album = 0;
-                result = getString(rs, result, rows2, album);
+                if(rows2 > 0) {
+                    result += "status:found";
+                    while(rs.next()) {
+                        result += ";name_" + (album++) + ":" + rs.getString(1);
+                    }
+                } else {
+                    result += "status:not_found";
+                }
             } else {
                 result += "status:not_found";
             }
@@ -265,18 +277,6 @@ public class MulticastServer extends Thread {
         }
     }
 
-    private String getString(ResultSet rs, String result, int rows2, int album) throws SQLException {
-        if (rows2 > 0) {
-            result += "status:found";
-            while (rs.next()) {
-                result += ";name_" + (album++) + ":" + rs.getString(1);
-            }
-        } else {
-            result += "status:not_found";
-        }
-        return result;
-    }
-
     /**
      * Album search.
      *
@@ -285,11 +285,18 @@ public class MulticastServer extends Thread {
     public void albumSearch(String alb_name) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String result = "type:album_search_response;";
-            String query = "SELECT name FROM albums WHERE name LIKE '%" + alb_name + "%'  ORDER BY name asc";
+            String query = "SELECT name FROM albums WHERE name LIKE '%"+ alb_name +"%'  ORDER BY name asc";
             ResultSet rs = st.executeQuery(query);
             int rows = countRows(rs);
             int album = 0;
-            result = getString(rs, result, rows, album);
+            if(rows > 0) {
+                result += "status:found";
+                while(rs.next()) {
+                    result += ";name_" + (album++) + ":" + rs.getString(1);
+                }
+            } else {
+                result += "status:not_found";
+            }
             send(result);
         } catch (SQLException ex) {
             Logger lgr = Logger.getLogger(MulticastServer.class.getName());
@@ -307,27 +314,27 @@ public class MulticastServer extends Thread {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String result = "type:album_info_response;";
             String query = "SELECT name,release_date,rating,review FROM albums,ratings" +
-                    " WHERE idAlbums = (SELECT idAlbums FROM albums WHERE name = '" + alb_name + "')" +
-                    " AND idAlbums = Albums_idAlbums ";
+            " WHERE idAlbums = (SELECT idAlbums FROM albums WHERE name = '" + alb_name + "')" +
+            " AND idAlbums = Albums_idAlbums ";
 
             System.out.println("Query1: " + query);
             ResultSet rs = st.executeQuery(query);
             int rows = countRows(rs);
             int review = 0;
-            if (rows > 0) {
+            if(rows > 0) {
                 rs.next();
-                result += "status:found;artist_name:" + rs.getString(1) + ";release_date:" + rs.getString(2);
-                do {
+                result += "status:found;artist_name:"+rs.getString(1)+";release_date:"+rs.getString(2);
+                do{
                     result += ";review_score_" + (review) + ":" + rs.getString(3) + ";review_description_" + (review++) + ":" + rs.getString(4);
-                } while (rs.next());
+                } while(rs.next());
 
                 query = "SELECT name FROM songs WHERE Albums_idAlbums = (SELECT idAlbums FROM albums WHERE name = '" + alb_name + "')";
                 System.out.println("Query2: " + query);
                 rs = st.executeQuery(query);
                 int rows2 = countRows(rs);
                 int songs = 0;
-                if (rows2 > 0) {
-                    while (rs.next()) {
+                if(rows2 > 0) {
+                    while(rs.next()) {
                         result += ";song_" + (songs++) + ":" + rs.getString(1);
                     }
                 }
@@ -352,11 +359,11 @@ public class MulticastServer extends Thread {
     public void reviewAlbum(String art_name, String alb_name, String user, int review, String desc) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String result = "type:album_review_response;";
-            String query = "INSERT INTO ratings VALUES(NULL,'" + desc + "'," + review + "," +
-                    "(SELECT idUsers FROM users WHERE username = '" + user + "')," +
-                    "(SELECT idAlbums FROM albums WHERE name = '" + alb_name + "'),(SELECT Artists_idArtists FROM albums WHERE name = '" + alb_name + "'))";
+            String query = "INSERT INTO ratings VALUES(NULL,'" + desc + "',"+ review +"," +
+            "(SELECT idUsers FROM users WHERE username = '" + user + "'),"+
+            "(SELECT idAlbums FROM albums WHERE name = '" + alb_name + "'),(SELECT Artists_idArtists FROM albums WHERE name = '" + alb_name + "'))";
 
-            if (st.executeUpdate(query) == 1)
+            if(st.executeUpdate(query) == 1)
                 result += "status:successful";
             else
                 result += "status:unsuccessful";
