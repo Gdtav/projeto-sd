@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mysql.cj.jdbc.result.CachedResultSetMetaDataImpl;
+
 /**
  * The type Multicast server.
  */
@@ -98,6 +100,12 @@ public class MulticastServer extends Thread {
             }
             else if(response.getOrDefault("type", " ").equals("make_editor")) {
                 makeEditor(response.getOrDefault("user", " "));
+            }
+            else if(response.getOrDefault("type", " ").equals("artist_edit")) {
+                artistEdit(response);
+            }
+            else if(response.getOrDefault("type", " ").euqls("album_edit")) {
+                albumEdit(response);
             }
         }
     }
@@ -393,20 +401,157 @@ public class MulticastServer extends Thread {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String query = "UPDATE users SET editor = 1 WHERE username = '" + user + "'";
 
-            if(st.executeUpdate(query) == 1)
+            if(st.executeUpdate(query) == 1) {
                 result += "status:success";
+                query = "INSERT INTO notifications VALUES(NULL,'You were granted Editor permissions while you were offline',(SELECT idUsers FROM users WHERE username = '" + user + "'))";
+                st.executeUpdate(query);
+            }
             else
                 result += "status:insuccess";
 
-            query = "INSERT INTO notifications VALUES(NULL,'You were granted Editor permissions while you were offline',(SELECT idUsers FROM users WHERE username = '" + user + "'))";
-            System.out.println("WHYYYY: "+query);
-            st.executeUpdate(query);
             send(result);
             return;
         } catch (SQLException ex) {
+            result += "status:insuccess";
             Logger lgr = Logger.getLogger(MulticastServer.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        send(result);
+    }
 
+    public void artistEdit(HashMap<String, String> response) {
+        String result = "type:artist_edit_response;";
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
+            String art_id = response.getOrDefault("artist_id", NULL);
+
+            String name = response.getOrDefault("name", " ");
+            String act_start = response.getOrDefault("activity_start", " ");
+            String act_end = response.getOrDefault("activity_end", " ");
+            String desc = response.getOrDefault("description", " ");
+            String date, query;
+
+            int chk = 0;
+            if(!name.equals(" ") || !act_start.equals(" ") || !act_end.equals(" ")) {
+                query = "UPDATE artists SET ";
+
+                if(!name.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "name = '" + name + "' ";
+                }
+                if(!act_start.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "activity_start = '" + act_start + "' ";
+                }
+                if(!act_end.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "activity_end = '" + act_end + "' ";
+                }
+                if(!desc.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "activity_end = '" + desc + "' ";
+                }
+                query += "WHERE idArtists = '" + art_id + "'";
+
+                if(st.executeUpdate(query) == 0) {
+                    result += "status:unsuccessful";
+                    send(result);
+                    return;
+                }
+            }
+
+            chk = 0;
+            String alb_id = " ";
+            for(int i=0;!response.getOrDefault("album_id_"+i, " ").equals(" ");i++) {
+
+                name = response.getOrDefault("album_"+i, " ");
+                date = response.getOrDefault("album_release_"+i, " ");
+
+                query = "UPDATE albums SET ";
+
+                if(!name.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "name = '" + name + "' ";
+                }
+
+                if(!date.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "release_date = '" + date + "' ";
+                }
+                query += "WHERE idAlbums = '" + alb_id + "'";
+
+                if(st.executeUpdate(query) == 0) {
+                    result += "status:unsuccessful";
+                    send(result);
+                    return;
+                }
+            }
+
+            result += "status:sucessful";
+        }   catch (SQLException ex) {
+            result += "status:unsucessful";
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        send(result);
+    }
+
+    public void albumEdit(HashMap<String, String> response) {
+        String result = "type:album_edit_response;";
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
+            String alb_id = response.getOrDefault("artist_id", " ");
+            String art_id = response.getOrDefault("album_id", " ");
+            String song_id;
+
+            String name = response.getOrDefault("album_name", " ");
+            String date = response.getOrDefault("album_date", " ");
+            String query;
+
+            int chk = 0;
+            if(!name.equals(" ") || !date.equals(" ")) {
+                query = "UPDATE artists SET ";
+
+                if(!name.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "name = '" + name + "' ";
+                }
+                if(!date.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "release_date = '" + date + "' ";
+                }
+
+                query += "WHERE idAlbuns = '" + alb_id + "' AND Artists_idArtists = '" + art_id +"'";
+                
+                if(st.executeUpdate(query) == 0) {
+                    result += "status:insuccess";
+                    send(result);
+                    return;
+                }
+            
+            }
+
+            chk = 0;
+            for(int i=0;!response.getOrDefault("song_id_"+i, " ").equals(" ");i++) {
+                query = "UPDATE songs SET ";
+                song_id = response.getOrDefault("song_id", NULL);
+                if(!name.equals(" ")) {
+                    if(chk++ != 0) query += ", ";
+                    query += "name = '" + name + "' ";
+                }
+
+                query += "WHERE idSongs = '" + song_id + "'Albums_idAlbuns = '" + alb_id + "' AND Albums_Artists_idArtists = '" + art_id +"'";
+                
+                if(st.executeUpdate(query) == 0) {
+                    result += "status:insuccess";
+                    send(result);
+                    return;
+                }
+            }
+
+            result += "status:sucessful";
+        } catch (SQLException ex) {
+            result += "status:unsucessful";
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
         send(result);
     }
