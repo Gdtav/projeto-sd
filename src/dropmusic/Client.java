@@ -57,7 +57,7 @@ public class Client implements Remote {
         Client client = new Client();
         String password;
         int port = 5000;
-        Scanner scanner = new Scanner(System.in);
+
         try {
             Registry registry = LocateRegistry.getRegistry(host, port);
             client.setServer((DropMusic) registry.lookup("dropmusic"));
@@ -74,26 +74,26 @@ public class Client implements Remote {
                 System.out.println("1 - Register");
                 System.out.println("2 - Logon");
                 System.out.println("3 - Exit");
-                int option = scanner.nextInt();
+                int option = protectedInputInt();
                 switch (option) {
                     case 1:
                         System.out.println("Please insert desired username:");
-                        Client.username = scanner.next();
+                        Client.username = protectedInputStr();
                         System.out.println("Please insert password:");
-                        password = scanner.next();
+                        password = protectedInputStr();
                         System.out.println("Repeat password:");
-                        while (!(scanner.next().equals(password))) {
+                        while (!(protectedInputStr().equals(password))) {
                             System.out.println("Passwords don't match. Please re-type password:");
-                            password = scanner.next();
+                            password = protectedInputStr();
                             System.out.println("Repeat password:");
                         }
                         client.server.register(username, password);
                         break;
                     case 2:
                         System.out.println("Insert username");
-                        username = scanner.next();
+                        username = protectedInputStr();
                         System.out.println("Please insert password:");
-                        password = scanner.next();
+                        password = protectedInputStr();
                         ArrayList<String> res = client.server.logonUser(username, password);
                         client.status[0] = res.get(0).equals("true");
                         client.status[1] = res.get(1).equals("true");
@@ -125,7 +125,6 @@ public class Client implements Remote {
      */
 
     private void mainMenu(boolean editor) {
-        Scanner scanner = new Scanner(System.in);
         int option;
         while (true) {
             if (editor) {
@@ -135,21 +134,21 @@ public class Client implements Remote {
                 System.out.println("3 - Edit information");
                 System.out.println("4 - Manage editors");
                 System.out.println("5 - Exit");
-                option = scanner.nextInt();
+                option = protectedInputInt();
                 switch (option) {
                     case 1:
-                        searchMenu(scanner, false);
+                        searchMenu( false);
                         break;
                     case 2:
-                        connectTCP(scanner);
+                        connectTCP();
                         break;
                     case 3:
-                        searchMenu(scanner, true);
+                        searchMenu(true);
                         break;
                     case 4:
                         System.out.println("Please insert username to become editor:");
                         try {
-                            if (server.makeEditor(scanner.next()))
+                            if (server.makeEditor(protectedInputStr()))
                                 System.out.println("Upgrade to editor succeeded.");
                             else
                                 System.out.println("Failed to upgrade to editor.");
@@ -167,13 +166,13 @@ public class Client implements Remote {
                 System.out.println("1 - Search");
                 System.out.println("2 - Transfer music");
                 System.out.println("3 - Exit");
-                option = scanner.nextInt();
+                option = protectedInputInt();
                 switch (option) {
                     case 1:
-                        searchMenu(scanner, false);
+                        searchMenu( false);
                         break;
                     case 2:
-                        connectTCP(scanner);
+                        connectTCP();
                         break;
                     case 3:
                         return;
@@ -188,28 +187,27 @@ public class Client implements Remote {
 
     /**
      * Menu for TCP connection with the dataserver.
-     * @param scanner the thread's scanner
      */
 
-    private void connectTCP(Scanner scanner) {
+    private void connectTCP() {
         System.out.println("Select an option:");
         System.out.println("1 - Upload file");
         System.out.println("2 - Download file");
         System.out.println("3 - Share file");
         System.out.println("4 - Return");
-        int option = scanner.nextInt();
+        int option = protectedInputInt();
         String song;
         switch (option) {
             case 1:
                 System.out.println("Insert song name:");
-                song = scanner.next();
+                song = protectedInputStr();
                 System.out.println("Insert filepath to upload:");
-                String filepath = scanner.next();
+                String filepath = protectedInputStr();
                 uploadFile(filepath, song);
                 break;
             case 2:
                 System.out.println("Insert song name to download:");
-                song = scanner.next();
+                song = protectedInputStr();
                 downloadFile(song);
                 break;
             case 3:
@@ -227,10 +225,9 @@ public class Client implements Remote {
      * The Search Menu method, which is used for both search and editing of information.
      *
      * @param edition states if the menu has been called for editing info or not.
-     * @param sc passes the scanner.
      */
 
-    private void searchMenu(Scanner sc, boolean edition) {
+    private void searchMenu( boolean edition) {
         HashMap<Integer, String> result = new HashMap<>();
         HashMap<String, String> edit = new HashMap<>();
         int i;
@@ -238,12 +235,12 @@ public class Client implements Remote {
         System.out.println("1 - Search artist");
         System.out.println("2 - Search album");
         System.out.println("3 - Return");
-        int option = sc.nextInt();
+        int option = protectedInputInt();
         String input;
         switch (option) {
             case 1:
                 System.out.println("Please insert search term: ");
-                input = sc.next();
+                input = protectedInputStr();
                 i = 0;
                 try {
                     for (String artist : server.artistSearch(input)) {
@@ -252,23 +249,23 @@ public class Client implements Remote {
                         i++;
                     }
                     System.out.println("Insert desired artist number:");
-                    option = sc.nextInt();
+                    option = protectedInputInt();
                     if (edition) {
                         System.out.println("new name:");
-                        edit.put("name", sc.next());
+                        edit.put("name", protectedInputStr());
                         System.out.println("new start of activity:");
-                        edit.put("activity_start", sc.next());
+                        edit.put("activity_start", protectedInputStr());
                         System.out.println("new end of activity:");
-                        edit.put("activity_end", sc.next());
+                        edit.put("activity_end", protectedInputStr());
                         System.out.println("new description:");
-                        edit.put("description", sc.next());
+                        edit.put("description", protectedInputStr());
                         System.out.println("How many albums:");
-                        i = sc.nextInt();
+                        i = protectedInputInt();
                         for (int j = 0; j < i; j++) {
                             System.out.println("Album name:");
-                            edit.put("album_" + j, sc.next());
+                            edit.put("album_" + j, protectedInputStr());
                             System.out.println("Album date:");
-                            edit.put("album_release_" + j, sc.next());
+                            edit.put("album_release_" + j, protectedInputStr());
                         }
                         server.editArtistInfo(edit);
                     } else {
@@ -281,7 +278,7 @@ public class Client implements Remote {
                 break;
             case 2:
                 System.out.println("Please insert search term: ");
-                input = sc.next();
+                input = protectedInputStr();
                 i = 0;
                 try {
                     for (String album : server.albumSearch(input)) {
@@ -290,29 +287,29 @@ public class Client implements Remote {
                         i++;
                     }
                     System.out.println("Insert desired album number:");
-                    option = sc.nextInt();
+                    option = protectedInputInt();
                     if (edition) {
                         System.out.println("new artist name:");
-                        edit.put("artist_name", sc.next());
+                        edit.put("artist_name", protectedInputStr());
                         System.out.println("new album name:");
-                        edit.put("album_name", sc.next());
+                        edit.put("album_name", protectedInputStr());
                         System.out.println("new album date");
-                        edit.put("album_date", sc.next());
+                        edit.put("album_date", protectedInputStr());
                         for (int j = 0; j < i; j++) {
                             System.out.println("song name:");
-                            edit.put("song_" + j, sc.next());
+                            edit.put("song_" + j, protectedInputStr());
                         }
                         server.editAlbumInfo(edit);
                     } else {
                         System.out.println(server.showAlbumInfo(result.get(option)).toString());
                         String album = result.get(option);
                         System.out.println("Do you wish to write an review? [y,N]");
-                        input = sc.next();
+                        input = protectedInputStr();
                         if (input.equals("y") || input.equals("Y")) {
                             System.out.println("Please give rating (0-5)");
-                            int rate = sc.nextInt();
+                            int rate = protectedInputInt();
                             System.out.println("Please write review:");
-                            input = sc.next();
+                            input = protectedInputStr();
                             if (server.reviewAlbum(rate, input, album, username)) {
                                 System.out.println("Review successfully published.");
                             } else {
@@ -373,5 +370,29 @@ public class Client implements Remote {
 
     private void downloadFile(String song) {
         // TODO
+    }
+
+    private static int protectedInputInt() {
+        while (true) {
+            try (Scanner scanner = new Scanner(System.in)) {
+                int option;
+                option = scanner.nextInt();
+                return option;
+            } catch (Exception e) {
+                System.out.println("PLease insert a number!");
+            }
+        }
+    }
+
+    private static String protectedInputStr() {
+        while (true) {
+            try (Scanner scanner = new Scanner(System.in)) {
+                String input;
+                input = scanner.next();
+                return input;
+            } catch (Exception e) {
+                System.out.println("PLease insert a valid input!");
+            }
+        }
     }
 }
