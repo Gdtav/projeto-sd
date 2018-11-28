@@ -108,7 +108,19 @@ public class MulticastServer extends Thread {
 
     private void send(String message) {
         System.out.println("Sent out: " + message);
-        Server.send(message, socket, MULTICAST_ADDRESS, PORT);
+        byte[] buffer = message.getBytes();
+        InetAddress group = null;
+        try {
+            group = InetAddress.getByName(MULTICAST_ADDRESS);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, PORT);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
