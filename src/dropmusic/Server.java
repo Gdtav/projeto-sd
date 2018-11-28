@@ -42,14 +42,14 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     private void send(String message) {
         try {
             MulticastSocket socket = new MulticastSocket();
-            sendMessage(message, socket, MULTICAST_ADDRESS, PORT);
+            send(message, socket, MULTICAST_ADDRESS, PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    static void sendMessage(String message, MulticastSocket socket, String multicast_address, int port) {
+    static void send(String message, MulticastSocket socket, String multicast_address, int port) {
         byte[] buffer = message.getBytes();
         InetAddress group = null;
         try {
@@ -137,27 +137,10 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         return getStrings(query, response);
     }
 
-    /**
-     * Implementation of the interface's method.
-     * @param input user search term
-     */
-
-    @Override
-    public ArrayList<String> albumSearch(String input) {
-        ArrayList<String> query = new ArrayList<>();
-        send("type:album_search;name:" + input);
-        return getStrings(query);
-    }
-
-    private ArrayList<String> getStrings(ArrayList<String> query) {
-        HashMap<String, String> response = listener.getMessage("type", "album_search_response");
-        return getStrings(query, response);
-    }
-
     private ArrayList<String> getStrings(ArrayList<String> query, HashMap<String, String> response) {
         int i = 0;
         if (!response.isEmpty()) {
-            if (response.get("status").equals("found")) {
+            if(response.get("status").equals("found")) {
                 while (response.getOrDefault("name_" + i, null) != null) {
                     query.add(response.get("name_" + i));
                     i++;
@@ -173,10 +156,24 @@ public class Server extends UnicastRemoteObject implements DropMusic {
      */
 
     @Override
+    public ArrayList<String> albumSearch(String input) {
+        ArrayList<String> query = new ArrayList<>();
+        send("type:album_search;name:" + input);
+        HashMap<String, String> response = listener.getMessage("type", "album_search_response");
+        return getStrings(query, response);
+    }
+
+    /**
+     * Implementation of the interface's method.
+     * @param input user search term
+     */
+
+    @Override
     public ArrayList<String> albumFromArtistSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:album_search_artist;name:" + input);
-        return getStrings(query);
+        HashMap<String, String> response = listener.getMessage("type","album_search_response");
+        return getStrings(query, response);
     }
 
     /**
