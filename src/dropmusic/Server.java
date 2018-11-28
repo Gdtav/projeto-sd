@@ -42,23 +42,27 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     private void send(String message) {
         try {
             MulticastSocket socket = new MulticastSocket();
-            byte[] buffer = message.getBytes();
-            InetAddress group = null;
-            try {
-                group = InetAddress.getByName(MULTICAST_ADDRESS);
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, PORT);
-            try {
-                socket.send(packet);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sendMessage(message, socket, MULTICAST_ADDRESS, PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    static void sendMessage(String message, MulticastSocket socket, String multicast_address, int port) {
+        byte[] buffer = message.getBytes();
+        InetAddress group = null;
+        try {
+            group = InetAddress.getByName(multicast_address);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, port);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -128,18 +132,9 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> artistSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:artist_search;name:" + input);
-        HashMap<String, String> response = new HashMap<>();
+        HashMap<String, String> response;
         response = listener.getMessage("type","artist_search_response");
-        int i = 0;
-        if (!response.isEmpty()) {
-            if(response.get("status").equals("found")) {
-                while (response.getOrDefault("name_" + i, null) != null) {
-                    query.add(response.get("name_" + i));
-                    i++;
-                }
-            }
-        }
-        return query;
+        return getStrings(query, response);
     }
 
     /**
@@ -151,7 +146,15 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> albumSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:album_search;name:" + input);
+        return getStrings(query);
+    }
+
+    private ArrayList<String> getStrings(ArrayList<String> query) {
         HashMap<String, String> response = listener.getMessage("type", "album_search_response");
+        return getStrings(query, response);
+    }
+
+    private ArrayList<String> getStrings(ArrayList<String> query, HashMap<String, String> response) {
         int i = 0;
         if (!response.isEmpty()) {
             if (response.get("status").equals("found")) {
@@ -173,17 +176,7 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     public ArrayList<String> albumFromArtistSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
         send("type:album_search_artist;name:" + input);
-        HashMap<String, String> response = listener.getMessage("type","album_search_response");
-        int i = 0;
-        if (!response.isEmpty()) {
-            if (response.get("status").equals("found")) {
-                while (response.getOrDefault("name_" + i, null) != null) {
-                    query.add(response.get("name_" + i));
-                    i++;
-                }
-            }
-        }
-        return query;
+        return getStrings(query);
     }
 
     /**
