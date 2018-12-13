@@ -154,6 +154,7 @@ $RECYCLE.BIN/
 
 
 # End of https://www.gitignore.io/api/java,linux,windows,intellij,visualstudiocode
+*.xml
 .idea/projeto-sd.iml
 src/sd_bd_workbench.mwb.bak
 src/dropmusic/test.java
