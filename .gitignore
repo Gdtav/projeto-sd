@@ -163,5 +163,3 @@ src/dropmusic/test.java
 .idea/vcs.xml
 projeto-sd.iml
 .idea/dataSources.xml
-.idea/artifacts/web_interface_war_exploded.xml
-web-interface/web-interface.iml
