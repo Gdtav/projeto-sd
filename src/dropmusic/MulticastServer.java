@@ -100,7 +100,7 @@ public class MulticastServer extends Thread {
                 makeEditor(response.getOrDefault("user", " "));
             } else if(response.getOrDefault("type", " ").equals("artist_edit")) {
                 artistEdit(response);
-            } else if(response.getOrDefault("type", " ").euqls("album_edit")) {
+            } else if(response.getOrDefault("type", " ").equals("album_edit")) {
                 albumEdit(response);
             }
         }
@@ -418,7 +418,7 @@ public class MulticastServer extends Thread {
     public void artistEdit(HashMap<String, String> response) {
         String result = "type:artist_edit_response;";
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
-            String art_id = response.getOrDefault("artist_id", NULL);
+            String art_id = response.getOrDefault("artist_id", " ");
 
             String name = response.getOrDefault("name", " ");
             String act_start = response.getOrDefault("activity_start", " ");
@@ -528,7 +528,7 @@ public class MulticastServer extends Thread {
             chk = 0;
             for(int i=0;!response.getOrDefault("song_id_"+i, " ").equals(" ");i++) {
                 query = "UPDATE songs SET ";
-                song_id = response.getOrDefault("song_id", NULL);
+                song_id = response.getOrDefault("song_id", " ");
                 if(!name.equals(" ")) {
                     if(chk++ != 0) query += ", ";
                     query += "name = '" + name + "' ";
