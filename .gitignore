@@ -27,3 +27,8 @@ web-interface/lib/log4j.jar
 web-interface/lib/ognl.jar
 web-interface/lib/struts2-core.jar
 *.iml
+.idea/shelf/unnamed/shelved.patch
+.idea/shelf/unnamed.xml
+.idea/dataSources/1b4fced2-62fe-49f2-ad8e-d5b54ac5f0f7.xml
+.idea/dataSources.xml
+.idea/dataSources.local.xml
