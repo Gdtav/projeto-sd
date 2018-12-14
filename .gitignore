@@ -27,3 +27,5 @@ web-interface/lib/log4j.jar
 web-interface/lib/ognl.jar
 web-interface/lib/struts2-core.jar
 web-interface/web-interface.iml
+web-interface/web-interface.iml
+.idea/artifacts/web_interface_war_exploded.xml
