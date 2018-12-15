@@ -16,7 +16,7 @@ import java.util.HashMap;
 /**
  * The interface Dropmusic.
  */
-interface DropMusic extends Remote {
+public interface DropMusic extends Remote {
 
     /**
      * Register user.
