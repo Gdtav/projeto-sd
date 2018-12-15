@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Hey!</title>
+<title>DropMusic</title>
 </head>
 <body>
 
@@ -18,6 +18,10 @@
 			<p>Welcome, anonymous user. Tell someone to fuck off!</p>
 		</c:otherwise>
 	</c:choose>
+
+    <h1>Main Menu</h1>
+    <h2><a href="<s:url action="search_art" />">Search Artist</a></h2>
+    <h2><a href="<s:url action="search_alb" />">Search Album</a></h2>
 
 	<p><a href="<s:url action="index" />">Back to login</a></p>
 

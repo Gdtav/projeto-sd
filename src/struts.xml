@@ -29,5 +29,17 @@
             <result name="login">/index.jsp</result>
         </action>
 
+        <!-- 'search_alb' action calls 'album' in 'SearchAction' -->
+        <action name="search_alb" class="WebStrut.Action.SearchAction" method="album">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <!-- 'search_alb' action calls 'album' in 'SearchAction' -->
+        <action name="search_art" class="WebStrut.Action.SearchAction" method="artist">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
     </package>
 </struts>
