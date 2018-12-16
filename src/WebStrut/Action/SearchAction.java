@@ -47,6 +47,29 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    public String album_info() throws RemoteException {
+        HashMap<String, String> alb_info = this.getDropBean().albumInfo(album);
+        ArrayList<HashMap<String, String>> reviews = new ArrayList<>();
+        ArrayList<String> songs = new ArrayList<>();
+
+        for(int i=0;alb_info.containsKey("song_"+i);i++) {
+            songs.add(alb_info.get("song_"+i));
+        }
+
+        for(int i=0;alb_info.containsKey("review_score_"+i);i++) {
+            HashMap<String, String> review = new HashMap<>();
+            review.put("review_desc",alb_info.remove("review_description_"+i));
+            review.put("review_score",alb_info.remove("review_score_"+i));
+            reviews.add(review);
+        }
+        this.session.put("album", alb_info);
+        this.session.put("album_songs", songs);
+        this.session.put("album_reviews", reviews);
+        this.session.put("search_result_alb_info", true);
+
+        return SUCCESS;
+    }
+
     public DropBean getDropBean() {
         if(!session.containsKey("dropBean"))
             this.setHeyBean(new DropBean());
@@ -63,6 +86,10 @@ public class SearchAction extends ActionSupport implements SessionAware {
 
     public void setArt_selected(String artist) {
         this.artist = artist;
+    }
+
+    public void setAlb_selected(String album) {
+        this.album = album;
     }
 
     @Override

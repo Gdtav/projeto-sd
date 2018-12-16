@@ -241,7 +241,7 @@ public class MulticastServer extends Thread {
 
                 int album = 0;
                 while(rs.next()) {
-                    result += ";album_" + (album++) + ":" + rs.getString(2) + ";album_release_1:" + rs.getString(3);
+                    result += ";album_" + album + ":" + rs.getString(2) + ";album_release_" + (album++) + ":" + rs.getString(3);
                 }
             } else {
                 result += "status:not_found";
@@ -260,7 +260,7 @@ public class MulticastServer extends Thread {
      */
     public void albumFromArtistSearch(String art_name) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
-            String query = "SELECT idUserts FROM artists WHERE name = '" + art_name + "'";
+            String query = "SELECT idUsers FROM artists WHERE name = '" + art_name + "'";
 
             ResultSet rs = st.executeQuery(query);
             String result = "type:artist_album_response;";
@@ -335,7 +335,7 @@ public class MulticastServer extends Thread {
             int review = 0;
             if(rows > 0) {
                 rs.next();
-                result += "status:found;artist_name:"+rs.getString(1)+";release_date:"+rs.getString(2);
+                result += "status:found;album_name:"+rs.getString(1)+";release_date:"+rs.getString(2);
                 do{
                     result += ";review_score_" + (review) + ":" + rs.getString(3) + ";review_description_" + (review++) + ":" + rs.getString(4);
                 } while(rs.next());

@@ -13,7 +13,7 @@ public class InsertAction extends ActionSupport implements SessionAware {
         this.session = map;
     }
 
-    public insert()
+    //public insert()
 
     public Map<String, Object> getSession() {
         return session;

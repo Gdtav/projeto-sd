@@ -115,7 +115,7 @@ public interface DropMusic extends Remote {
      * @return the array list
      * @throws RemoteException the remote exception
      */
-    ArrayList<String> showAlbumInfo(String input) throws RemoteException;
+    HashMap<String, String> showAlbumInfo(String input) throws RemoteException;
 
     String addArtist(HashMap<String,String> input) throws RemoteException;
 

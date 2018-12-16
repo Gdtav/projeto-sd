@@ -42,7 +42,7 @@ class MulticastListener {
             long start = System.currentTimeMillis();
             while (true) {
                 System.out.println("-------------In the Listener Cycle -------------");
-                byte[] buffer = new byte[256];
+                byte[] buffer = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 multicastSocket.receive(packet);
                 System.out.println("Received packet from " + packet.getAddress().getHostAddress() + ":" + packet.getPort() + " with message:");

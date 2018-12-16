@@ -48,6 +48,10 @@ public class DropBean {
         return server.albumSearch(alb);
     }
 
+    public HashMap<String, String> albumInfo(String alb) throws RemoteException {
+        return server.showAlbumInfo(alb);
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

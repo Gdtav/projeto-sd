@@ -46,5 +46,10 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="search_alb_info" class="WebStrut.Action.SearchAction" method="album_info">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
     </package>
 </struts>

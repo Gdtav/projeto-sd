@@ -351,7 +351,7 @@ public class Client implements Remote {
      * @param song is song name
      */
     private void uploadFile(String filepath, String song) {
-        try {
+        /*try {
             Socket socket = new Socket(server.getIP(), 7001);
             FileOutputStream fos = (FileOutputStream) socket.getOutputStream();
             File file = new File(filepath);
@@ -359,7 +359,7 @@ public class Client implements Remote {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**

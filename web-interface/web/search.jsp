@@ -34,13 +34,37 @@
         <div style="flex: 1">
             <c:if test="${search_result_art_info == true}">
                 <h1>Info on this <c:out value = "${artist['name']}"/> fella:</h1><br>
-                <h3><c:out value="${artist['activity_start']}" /></h3><br>
-                <h3><c:out value="${artist['activity_end']}" /></h3><br>
-                <h3><c:out value="${artist['description']}" /></h3><br>
-                <c:forEach items="${artist_albs}" var="alb">
-                    <h3><c:out value="${alb['album_name']}" /></h3><br>
-                    <h3><c:out value="${alb['album_release']}" /></h3><br>
-                </c:forEach>
+                <h4>Start date: <c:out value="${artist['activity_start']}" /></h4>
+                <h4>    End date:<c:out value="${artist['activity_end']}" /></h4><br>
+                <h4><c:out value="${artist['description']}" /></h4><br>
+                <s:form action="search_alb_info" method="post">
+                    <select name="alb_selected" onchange="this.form.submit()">
+                        <c:forEach items="${artist_albs}" var="alb">
+                            <option value="${alb['album_name']}" >${alb['album_name']} - ${alb['album_release']}</option>
+                        </c:forEach>
+                    </select>
+                    <s:submit />
+                </s:form>
+            </c:if>
+        </div>
+        <div style="flex: 1">
+            <c:if test="${search_result_alb_info == true}">
+                <h1>Info on this <c:out value = "${album['album_name']}"/> album:</h1><br>
+                <h4><c:out value="${album['album_release']}" /></h4><br>
+                <s:form action="search_alb_info" method="post">
+                    <select name="alb_selected" onchange="this.form.submit()">
+                        <c:forEach items="${album_songs}" var="song">
+                            <option value="${song}" >${song}</option>
+                        </c:forEach>
+                    </select>
+                </s:form>
+                <s:form action="search_alb_info" method="post">
+                    <select name="alb_selected" onchange="this.form.submit()">
+                        <c:forEach items="${album_reviews}" var="review">
+                            <option>${review['review_score']} - ${review['review_desc']}</option>
+                        </c:forEach>
+                    </select>
+                </s:form>
             </c:if>
         </div>
     </div>
