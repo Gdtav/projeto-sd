@@ -35,6 +35,19 @@ public class DropBean {
             return false;
 
     }
+
+    public ArrayList<String> searchArtists(String art) throws RemoteException {
+        return server.artistSearch(art);
+    }
+
+    public ArrayList<String> showArtistInfo(String art) throws RemoteException {
+        return server.showArtistInfo(art);
+    }
+
+    public ArrayList<String> searchAlbums(String alb) throws RemoteException {
+        return server.albumSearch(alb);
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

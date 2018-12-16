@@ -30,13 +30,18 @@
         </action>
 
         <!-- 'search_alb' action calls 'album' in 'SearchAction' -->
-        <action name="search_alb" class="WebStrut.Action.SearchAction" method="album">
+        <action name="search_alb" class="WebStrut.Action.SearchAction" method="albums">
             <result name="success">/search.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
 
         <!-- 'search_alb' action calls 'album' in 'SearchAction' -->
-        <action name="search_art" class="WebStrut.Action.SearchAction" method="artist">
+        <action name="search_art" class="WebStrut.Action.SearchAction" method="artists">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="search_art_info" class="WebStrut.Action.SearchAction" method="artist_info">
             <result name="success">/search.jsp</result>
             <result name="error">/error.jsp</result>
         </action>

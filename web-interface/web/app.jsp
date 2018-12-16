@@ -20,8 +20,7 @@
 	</c:choose>
 
     <h1>Main Menu</h1>
-    <h2><a href="<s:url action="search_art" />">Search Artist</a></h2>
-    <h2><a href="<s:url action="search_alb" />">Search Album</a></h2>
+    <h2><a href='${pageContext.request.contextPath}/search.jsp'>Search Artist or Album</a></h2>
 
 	<p><a href="<s:url action="index" />">Back to login</a></p>
 

@@ -303,7 +303,7 @@ public class Client implements Remote {
                     } else {
                         System.out.println(server.showAlbumInfo(result.get(option)).toString());
                         String album = result.get(option);
-                        System.out.println("Do you wish to write an review? [y,N]");
+                        System.out.println("Do you wish to write a review? [y,N]");
                         input = protectedInputStr();
                         if (input.equals("y") || input.equals("Y")) {
                             System.out.println("Please give rating (0-5)");
