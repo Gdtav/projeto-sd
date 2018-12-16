@@ -305,14 +305,26 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         return query;
     }
 
-
-    /**
-     * Method for requesting a dataserver's IP
-     * @return the ip address of a server so the client can connect over TCP
-     */
-    public String getIP() {
-        send("type:ip_request");
-        HashMap<String, String> response = listener.getMessage("type", "ip_request_response");
-        return response.get("address");
+    @Override
+    public String addArtist(HashMap<String, String> input) throws RemoteException {
+        StringBuilder message = new StringBuilder();
+        message.append("type:artist_add;");
+        for (String string: input.keySet()) {
+            message.append(string).append(":").append(input.get(string)).append(";");
+        }
+        send(message.toString());
+        return listener.getMessage("type","artist_add_response").get("status");
     }
+
+    @Override
+    public String addAlbum(HashMap<String, String> input) throws RemoteException {
+        StringBuilder message = new StringBuilder();
+        message.append("type:album_add;");
+        for (String string: input.keySet()) {
+            message.append(string).append(":").append(input.get(string)).append(";");
+        }
+        send(message.toString());
+        return listener.getMessage("type","album_add_response").get("status");
+    }
+
 }

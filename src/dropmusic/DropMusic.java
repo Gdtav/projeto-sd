@@ -117,11 +117,7 @@ public interface DropMusic extends Remote {
      */
     ArrayList<String> showAlbumInfo(String input) throws RemoteException;
 
-    /**
-     * Gets ip.
-     *
-     * @return the ip
-     * @throws RemoteException the remote exception
-     */
-    String getIP() throws RemoteException;
+    String addArtist(HashMap<String,String> input) throws RemoteException;
+
+    String addAlbum(HashMap<String, String> input) throws RemoteException;
 }
