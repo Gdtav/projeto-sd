@@ -251,20 +251,9 @@ public class Server extends UnicastRemoteObject implements DropMusic {
      * @return an array with the Artis's informations.
      */
     @Override
-    public ArrayList<String> showArtistInfo(String input) {
-        ArrayList<String> query = new ArrayList<>();
+    public HashMap<String, String> showArtistInfo(String input) {
         send("type:artist_info;name:" + input);
-        HashMap<String, String> response = listener.getMessage("type", "artist_info_response");
-        if (!response.isEmpty()) {
-            if (response.get("status").equals("found")) {
-                query.addAll(response.values());
-                query.remove("artist_info_response");
-                query.remove("found");
-            } else if (response.get("status").equals("not_found")) {
-                query.add("failed to retrieve artist info");
-            }
-        }
-        return query;
+        return listener.getMessage("type", "artist_info_response");
     }
 
     /**

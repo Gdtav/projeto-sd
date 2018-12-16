@@ -6,6 +6,7 @@ import org.apache.struts2.interceptor.SessionAware;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SearchAction extends ActionSupport implements SessionAware {
@@ -30,9 +31,19 @@ public class SearchAction extends ActionSupport implements SessionAware {
     }
 
     public String artist_info() throws RemoteException {
-        ArrayList<String> arts = this.getDropBean().showArtistInfo(artist);
-        this.session.put("artist", arts);
-        this.session.put("search_result_art", true);
+        HashMap<String, String> art_info = this.getDropBean().artistInfo(artist);
+        ArrayList<HashMap<String, String>> art_albums = new ArrayList<>();
+
+        for(int i=0;art_info.containsKey("album_"+i);i++) {
+            HashMap<String, String> art_albums_map = new HashMap<>();
+            art_albums_map.put("album_name",art_info.remove("album_"+i));
+            art_albums_map.put("album_release",art_info.remove("album_release_"+i));
+            art_albums.add(art_albums_map);
+        }
+        this.session.put("artist", art_info);
+        this.session.put("artist_albs", art_albums);
+        this.session.put("search_result_art_info", true);
+
         return SUCCESS;
     }
 

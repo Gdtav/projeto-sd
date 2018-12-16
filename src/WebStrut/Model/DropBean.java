@@ -2,12 +2,12 @@ package WebStrut.Model;
 
 import dropmusic.DropMusic;
 
-import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DropBean {
     private DropMusic server;
@@ -40,7 +40,7 @@ public class DropBean {
         return server.artistSearch(art);
     }
 
-    public ArrayList<String> showArtistInfo(String art) throws RemoteException {
+    public HashMap<String, String> artistInfo(String art) throws RemoteException {
         return server.showArtistInfo(art);
     }
 
