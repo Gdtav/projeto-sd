@@ -284,25 +284,33 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
     @Override
-    public String addArtist(HashMap<String, String> input) throws RemoteException {
-        StringBuilder message = new StringBuilder();
-        message.append("type:artist_add;");
-        for (String string: input.keySet()) {
-            message.append(string).append(":").append(input.get(string)).append(";");
+    public boolean addArtist(String name, String date1, String date2, String desc) throws RemoteException {
+        HashMap<String, String> response;
+        send("type:artist_add;art_name:" + name + ";act_start:" + date1 + ";act_end:" + date2 + ";art_desc:" + desc);
+        if ((response = listener.getMessage("type", "artist_add_response")) != null) {
+            return response.get("status").equals("successful");
         }
-        send(message.toString());
-        return listener.getMessage("type","artist_add_response").get("status");
+        return false;
     }
 
     @Override
-    public String addAlbum(HashMap<String, String> input) throws RemoteException {
-        StringBuilder message = new StringBuilder();
-        message.append("type:album_add;");
-        for (String string: input.keySet()) {
-            message.append(string).append(":").append(input.get(string)).append(";");
+    public boolean addAlbum(String name, String date, String artist) throws RemoteException {
+        HashMap<String, String> response;
+        send("type:album_add;alb_name:" + name + ";release_date:" + date + ";artist:" + artist);
+        if ((response = listener.getMessage("type", "album_add_response")) != null) {
+            return response.get("status").equals("successful");
         }
-        send(message.toString());
-        return listener.getMessage("type","album_add_response").get("status");
+        return false;
+    }
+
+    @Override
+    public boolean addSong(String name, String lyrics, String artist, String album) throws RemoteException {
+        HashMap<String, String> response;
+        send("type:song_add;song_name:" + name + ";lyrics:" + lyrics + ";artist:" + artist + ";album:" + album);
+        if ((response = listener.getMessage("type", "song_add_response")) != null) {
+            return response.get("status").equals("successful");
+        }
+        return false;
     }
 
 }

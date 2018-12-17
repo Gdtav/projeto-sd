@@ -14,7 +14,7 @@
 </head>
 <body>
     <div style="display: flex;">
-        <div style="flex: 1">
+        <div style="flex: 1;margin-right:2em">
             <div style="display:table;width: auto;border: 2px solid #666666;border-spacing: 5px; padding: 5px">
                 <s:form action="search_art" method="post">
                     <s:textfield label="Search Artist" name="input" />
@@ -23,24 +23,94 @@
             </div>
             <c:if test="${insert_artist == true}">
                 <div style="display:table;width: auto; margin-top: 2em; border: 2px solid #666666;border-spacing: 5px; padding: 5px">
-                    <form action="search_art_info" method="post">
-                        heyo bitch
+                    <h1><c:out value = "${'Create New Artist:'}"/></h1>
+                    <form action="new_artist" method="post">
+                        <table>
+                            <tr>
+                                <td>
+                                    Artist Name:
+                                </td>
+                                <td>
+                                    <input type="text" name="new_art_name">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Activity Start:
+                                </td>
+                                <td>
+                                    <input type="date" name="new_art_start" value="2018-12-21" min="1950-01-01" max="2099-12-31">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Activity End:
+                                </td>
+                                <td>
+                                    <input type="date" name="new_art_end" value="2018-12-21" min="1950-01-01" max="2099-12-31">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Description:
+                                </td>
+                                <td>
+                                    <textarea rows="4" cols="50" name="new_artist_desc"></textarea>
+                                </td>
+                            </tr>
+                        </table>
                         <input type="submit" value="Create Artist">
                     </form>
                 </div>
             </c:if>
             <c:if test="${insert_album == true}">
                 <div style="display:table;width: auto; margin-top: 2em; border: 2px solid #666666;border-spacing: 5px; padding: 5px">
-                    <form action="search_art_info" method="post">
-                        heyo bitch
+                    <h1><c:out value = "${'Create New Album:'}"/></h1>
+                    <form action="new_album" method="post">
+                        <table>
+                            <tr>
+                                <td>
+                                    Album Name:
+                                </td>
+                                <td>
+                                    <input type="text" name="new_alb_name">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Release Date:
+                                </td>
+                                <td>
+                                    <input type="date" name="new_alb_release" value="2018-12-21" min="1950-01-01" max="2099-12-31">
+                                </td>
+                            </tr>
+                        </table>
                         <input type="submit" value="Create Album">
                     </form>
                 </div>
             </c:if>
             <c:if test="${insert_song == true}">
                 <div style="display:table;width: auto; margin-top: 2em; border: 2px solid #666666;border-spacing: 5px; padding: 5px">
-                    <form action="search_art_info" method="post">
-                        heyo bitch
+                    <h1><c:out value = "${'Create New Song:'}"/></h1>
+                    <form action="new_song" method="post">
+                        <table>
+                            <tr>
+                                <td>
+                                    Song Name:
+                                </td>
+                                <td>
+                                    <input type="text" name="new_song_name">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Lyrics:
+                                </td>
+                                <td>
+                                    <textarea rows="4" cols="50" name="new_song_lyrics"></textarea>
+                                </td>
+                            </tr>
+                        </table>
                         <input type="submit" value="Create Song">
                     </form>
                 </div>

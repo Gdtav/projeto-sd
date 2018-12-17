@@ -56,6 +56,19 @@ public class DropBean {
     public boolean review_alb(int score, String desc) throws RemoteException {
         return server.reviewAlbum(score,desc,album,username);
     }
+
+    public boolean add_art(String name, String date1, String date2, String desc) throws RemoteException {
+        return server.addArtist(name,date1,date2,desc);
+    }
+
+    public boolean add_alb(String name, String date) throws RemoteException {
+        return server.addAlbum(name,date,artist);
+    }
+
+    public boolean add_song(String name, String lyrics) throws RemoteException {
+        return server.addSong(name,lyrics,artist,album);
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

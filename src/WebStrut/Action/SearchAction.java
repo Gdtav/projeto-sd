@@ -13,7 +13,10 @@ public class SearchAction extends ActionSupport implements SessionAware {
     private Map<String, Object> session;
     private String input;
     private String artist, album, desc;
+    private String new_art, new_date1, new_date2, new_desc;
     private int rating;
+    private String new_alb,new_alb_release;
+    private String new_song, new_song_lyrics;
 
     public String albums() throws RemoteException {
         // any username is accepted without confirmation (should check using RMI)
@@ -88,7 +91,6 @@ public class SearchAction extends ActionSupport implements SessionAware {
     }
 
     public String review_alb() throws RemoteException {
-        System.out.println("Album Selected:" + album);
         boolean response = this.getDropBean().review_alb(rating,desc);
         if(response == true)
             this.session.put("review_result", true);
@@ -115,6 +117,33 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    public String new_artist() throws RemoteException {
+        boolean response = this.getDropBean().add_art(new_art,new_date1,new_date2,new_desc);
+        if(response == true)
+            this.session.put("newArt_result", true);
+        else
+            this.session.put("newArt_result", false);
+        return SUCCESS;
+    }
+
+    public String new_album() throws RemoteException {
+        boolean response = this.getDropBean().add_alb(new_alb,new_alb_release);
+        if(response == true)
+            this.session.put("newAlb_result", true);
+        else
+            this.session.put("newAlb_result", false);
+        return SUCCESS;
+    }
+
+    public String new_song() throws RemoteException {
+        boolean response = this.getDropBean().add_song(new_song,new_song_lyrics);
+        if(response == true)
+            this.session.put("newSong_result", true);
+        else
+            this.session.put("newSong_result", false);
+        return SUCCESS;
+    }
+
     public DropBean getDropBean() {
         if(!session.containsKey("dropBean"))
             this.setHeyBean(new DropBean());
@@ -137,6 +166,7 @@ public class SearchAction extends ActionSupport implements SessionAware {
         this.album = album;
     }
 
+
     public void setReview_score(int score) {
         this.rating = score;
     }
@@ -144,6 +174,38 @@ public class SearchAction extends ActionSupport implements SessionAware {
     public void setReview_desc(String desc) {
         this.desc = desc;
     }
+
+
+    public void setNew_art_name(String name) {
+        this.new_art = name;
+    }
+
+    public void setNew_art_start(String date) {
+        this.new_date1 = date;
+    }
+
+    public void setNew_art_end(String date) {
+        this.new_date2 = date;
+    }
+
+    public void setNew_artist_desc(String desc) {
+        this.new_desc = desc;
+    }
+
+
+    public void setNew_alb_name(String name) {
+        this.new_alb = name;
+    }
+
+    public void setNew_alb_release(String release) {
+        this.new_alb_release = release;
+    }
+
+    public void setNew_song_name(String name) {
+        this.new_song = name;
+    }
+
+    public void setNew_song_lyrics(String lyrics) { this.new_song_lyrics = lyrics; }
 
     @Override
     public void setSession(Map<String, Object> session) {

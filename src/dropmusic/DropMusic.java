@@ -117,7 +117,9 @@ public interface DropMusic extends Remote {
      */
     HashMap<String, String> showAlbumInfo(String input) throws RemoteException;
 
-    String addArtist(HashMap<String,String> input) throws RemoteException;
+    boolean addArtist(String name, String date1, String date2, String desc) throws RemoteException;
 
-    String addAlbum(HashMap<String, String> input) throws RemoteException;
+    boolean addAlbum(String name, String date, String artist) throws RemoteException;
+
+    boolean addSong(String name, String lyrics, String artist, String album) throws RemoteException;
 }

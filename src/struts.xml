@@ -71,5 +71,20 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="new_artist" class="WebStrut.Action.SearchAction" method="new_artist">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="new_album" class="WebStrut.Action.SearchAction" method="new_album">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="new_song" class="WebStrut.Action.SearchAction" method="new_song">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
     </package>
 </struts>
