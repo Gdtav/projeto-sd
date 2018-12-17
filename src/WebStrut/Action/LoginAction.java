@@ -7,6 +7,9 @@ import org.apache.struts2.interceptor.SessionAware;
 import java.rmi.RemoteException;
 import java.util.Map;
 
+/**
+ * The type Login action.
+ */
 public class LoginAction extends ActionSupport implements SessionAware {
     private Map<String, Object> session;
     private String username = null, password = null;
@@ -26,20 +29,40 @@ public class LoginAction extends ActionSupport implements SessionAware {
             return LOGIN;
     }
 
+    /**
+     * Sets username.
+     *
+     * @param username the username
+     */
     public void setUsername(String username) {
         this.username = username; // will you sanitize this input? maybe use a prepared statement?
     }
 
+    /**
+     * Sets password.
+     *
+     * @param password the password
+     */
     public void setPassword(String password) {
         this.password = password; // what about this input?
     }
 
+    /**
+     * Gets drop bean.
+     *
+     * @return the drop bean
+     */
     public DropBean getDropBean() {
         if(!session.containsKey("dropBean"))
             this.setHeyBean(new DropBean());
         return (DropBean) session.get("dropBean");
     }
 
+    /**
+     * Sets hey bean.
+     *
+     * @param dropBean the drop bean
+     */
     public void setHeyBean(DropBean dropBean) {
         this.session.put("dropBean", dropBean);
     }

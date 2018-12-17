@@ -9,12 +9,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Search action.
+ */
 public class SearchAction extends ActionSupport implements SessionAware {
     private Map<String, Object> session;
     private String input;
     private String artist, album, desc;
     private int rating;
 
+    /**
+     * Albums string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String albums() throws RemoteException {
         // any username is accepted without confirmation (should check using RMI)
         ArrayList<String> albs = this.getDropBean().searchAlbums(input);
@@ -30,6 +39,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
     }
 
 
+    /**
+     * Artists string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String artists() throws RemoteException {
         ArrayList<String> arts = this.getDropBean().searchArtists(input);
         this.session.put("artists", arts);
@@ -43,6 +58,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * Artist info string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String artist_info() throws RemoteException {
         this.getDropBean().setArtist(this.artist);
         HashMap<String, String> art_info = this.getDropBean().artistInfo();
@@ -64,6 +85,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * Album info string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String album_info() throws RemoteException {
         this.getDropBean().setAlbum(this.album);
         HashMap<String, String> alb_info = this.getDropBean().albumInfo();
@@ -87,6 +114,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * Review alb string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String review_alb() throws RemoteException {
         System.out.println("Album Selected:" + album);
         boolean response = this.getDropBean().review_alb(rating,desc);
@@ -97,50 +130,100 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * Show insert artist string.
+     *
+     * @return the string
+     */
     public String show_insert_artist() {
         this.session.put("insert_artist", true);
 
         return SUCCESS;
     }
 
+    /**
+     * Show insert album string.
+     *
+     * @return the string
+     */
     public String show_insert_album() {
         this.session.put("insert_album", true);
 
         return SUCCESS;
     }
 
+    /**
+     * Show insert song string.
+     *
+     * @return the string
+     */
     public String show_insert_song() {
         this.session.put("insert_song", true);
 
         return SUCCESS;
     }
 
+    /**
+     * Gets drop bean.
+     *
+     * @return the drop bean
+     */
     public DropBean getDropBean() {
         if(!session.containsKey("dropBean"))
             this.setHeyBean(new DropBean());
         return (DropBean) session.get("dropBean");
     }
 
+    /**
+     * Sets hey bean.
+     *
+     * @param dropBean the drop bean
+     */
     public void setHeyBean(DropBean dropBean) {
         this.session.put("dropBean", dropBean);
     }
 
+    /**
+     * Sets input.
+     *
+     * @param input the input
+     */
     public void setInput(String input) {
         this.input = input;
     }
 
+    /**
+     * Sets art selected.
+     *
+     * @param artist the artist
+     */
     public void setArt_selected(String artist) {
         this.artist = artist;
     }
 
+    /**
+     * Sets alb selected.
+     *
+     * @param album the album
+     */
     public void setAlb_selected(String album) {
         this.album = album;
     }
 
+    /**
+     * Sets review score.
+     *
+     * @param score the score
+     */
     public void setReview_score(int score) {
         this.rating = score;
     }
 
+    /**
+     * Sets review desc.
+     *
+     * @param desc the desc
+     */
     public void setReview_desc(String desc) {
         this.desc = desc;
     }

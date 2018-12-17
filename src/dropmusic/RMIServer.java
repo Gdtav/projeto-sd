@@ -1,13 +1,3 @@
-/**
- * DROPMUSIC
- * RMI Server
- * This class runs a Registry located on the port 5000 and binds an implementation of
- * DropMusic interface (Server class) to "dropmusic" on the registry, if it fids itself as the main server.
- * Otherwise, it will lookup the already binded object on the RMI registry and call the dummy method isAlive()
- * until it receives an exception. When it happens, the server rebinds the name "dropmusic" to its own server object
- * and becomes the main server.
- */
-
 package dropmusic;
 
 import java.rmi.NotBoundException;
@@ -16,7 +6,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- * The RMI Server. This class tests if there is a registry and acts as Main or Backup server accordingly.
+ * DROPMUSIC
+ * RMI Server
+ * This class runs a Registry located on the port 5000 and binds an implementation of
+ * DropMusic interface (Server class) to "dropmusic" on the registry, if it fids itself as the main server.
+ * Otherwise, it will lookup the already binded object on the RMI registry and call the dummy method isAlive()
+ * until it receives an exception. When it happens, the server rebinds the name "dropmusic" to its own server object
+ * and becomes the main server.
  */
 public class RMIServer {
 

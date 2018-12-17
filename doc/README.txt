@@ -9,11 +9,9 @@ Como correr o programa:
 Instalar MySQL na máquina
 Instalar driver MySQL - JDBC - jConnect
 Importar a base de dados do script SQL (db_tests.sql) contido na pasta
+instalar o Tomcat
 Para correr os jar files:
     $ java -jar <filename.jar>
 Correr dataserver.jar
 Correr server.jar
-abrir terminal e anotar endereço IP da máquina
-Correr client.jar
-inserir endereço IP quando pedido no client.jar
-Seguir instruções no ecrã
+Correr ficheiro war

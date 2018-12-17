@@ -7,8 +7,7 @@ import java.net.MulticastSocket;
 import java.util.HashMap;
 
 /**
- * The type Multicast listener. It is a thread that runs in the background receiving all multicast messages and mapping
- * them to HashMaps for easier manipulation.
+ * The type Multicast listener. This class allows to get a message from the multicast address
  */
 class MulticastListener {
     private String MULTICAST_ADDRESS;
@@ -27,11 +26,11 @@ class MulticastListener {
     }
 
     /**
-     * Reads Multicast message and transforms it into an Hashmap.
+     * Gets message.
      *
      * @param query    the query
-     * @param expected the expected
-     * @return the reply's Hashmap
+     * @param expected the expected answer type
+     * @return the message
      */
     HashMap<String, String> getMessage(String query, String expected) {
         HashMap<String, String> reply = new HashMap<>();
@@ -63,12 +62,12 @@ class MulticastListener {
     }
 
     /**
-     * Auxiliary method to turn a protocol's string into a HashMap
+     * Create hashmap from received message.
      *
-     * @param buffer the message received from the listener
-     * @return the HashMap which contains the message read by the Listener
+     * @param buffer the buffer
+     * @return the hash map
      */
-    private HashMap<String, String> createMap(String buffer) {
+    HashMap<String, String> createMap(String buffer) {
         try {
             HashMap<String, String> message = new HashMap<>();
             String[] pairs = buffer.split(";");

@@ -5,8 +5,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 /**
- * This class is a Thread running in the Client's background which provides failover support in case
- * the RMI Server goes down, rebinding to the secondary server's registry.
+ * The class to address failure of RMI server
  */
 public class Failover extends Thread {
 
@@ -16,7 +15,7 @@ public class Failover extends Thread {
     private Client client;
 
     /**
-     * Gets the Interface Implementation reference.
+     * Gets stub.
      *
      * @return the stub
      */
@@ -24,12 +23,17 @@ public class Failover extends Thread {
         return stub;
     }
 
-    private void setStub(DropMusic stub) {
+    /**
+     * Sets stub.
+     *
+     * @param stub the stub
+     */
+    void setStub(DropMusic stub) {
         this.stub = stub;
     }
 
     /**
-     * Instantiates a new Failover thread.
+     * Instantiates a new thread to verify if the server is alive. When it gets an exception, creates a new server.
      *
      * @param stub   the stub
      * @param host   the host

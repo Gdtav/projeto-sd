@@ -1,11 +1,3 @@
-/**
- * DROPMUSIC
- * Program's remote interface
- * Failover, Client, Server, RMIServer, DropMusic, MulticastListener classes created by Guilherme Tavares,
- * revised and corrected by Pedro Silva.
- * MulticastServer created by Pedro Silva.
- */
-
 package dropmusic;
 
 import java.rmi.Remote;
@@ -13,13 +5,17 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * The interface Dropmusic.
- */
+    /**
+     * DROPMUSIC
+     * Program's remote interface
+     * Failover, Client, Server, RMIServer, DropMusic, MulticastListener classes created by Guilherme Tavares,
+     * revised and corrected by Pedro Silva.
+     * MulticastServer created by Pedro Silva.
+     */
 public interface DropMusic extends Remote {
 
     /**
-     * Register user.
+     * Register.
      *
      * @param username the username
      * @param password the password
@@ -27,6 +23,14 @@ public interface DropMusic extends Remote {
      */
     void register(String username, String password) throws RemoteException;
 
+    /**
+     * Logon user array list.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the array list
+     * @throws RemoteException the remote exception
+     */
     ArrayList<String> logonUser(String username, String password) throws RemoteException;
 
     /**
@@ -49,6 +53,7 @@ public interface DropMusic extends Remote {
 
     /**
      * Album from artist search array list.
+     *
      * @param input the input
      * @return the array list
      * @throws RemoteException the remote exception
@@ -92,10 +97,10 @@ public interface DropMusic extends Remote {
     void editArtistInfo(HashMap<String, String> input) throws RemoteException;
 
     /**
-     * Show artist info array list.
+     * Show artist info hash map.
      *
      * @param input the input
-     * @return the array list
+     * @return the hash map
      * @throws RemoteException the remote exception
      */
     HashMap<String, String> showArtistInfo(String input) throws RemoteException;
@@ -109,15 +114,29 @@ public interface DropMusic extends Remote {
     void editAlbumInfo(HashMap<String, String> input) throws RemoteException;
 
     /**
-     * Show album info array list.
+     * Show album info hash map.
      *
      * @param input the input
-     * @return the array list
+     * @return the hash map
      * @throws RemoteException the remote exception
      */
     HashMap<String, String> showAlbumInfo(String input) throws RemoteException;
 
+    /**
+     * Add artist string.
+     *
+     * @param input the input
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     String addArtist(HashMap<String,String> input) throws RemoteException;
 
+    /**
+     * Add album string.
+     *
+     * @param input the input
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     String addAlbum(HashMap<String, String> input) throws RemoteException;
 }

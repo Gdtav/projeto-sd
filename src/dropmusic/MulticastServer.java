@@ -365,6 +365,7 @@ public class MulticastServer extends Thread {
      *
      * @param art_name the art name
      * @param alb_name the alb name
+     * @param user     the user
      * @param review   the review
      * @param desc     the desc
      */
@@ -416,6 +417,11 @@ public class MulticastServer extends Thread {
         send(result);
     }
 
+    /**
+     * Artist edit.
+     *
+     * @param response the response
+     */
     public void artistEdit(HashMap<String, String> response) {
         String result = "type:artist_edit_response;";
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
@@ -492,6 +498,11 @@ public class MulticastServer extends Thread {
         send(result);
     }
 
+    /**
+     * Album edit.
+     *
+     * @param response the response
+     */
     public void albumEdit(HashMap<String, String> response) {
         String result = "type:album_edit_response;";
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
