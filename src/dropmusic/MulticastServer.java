@@ -92,11 +92,9 @@ public class MulticastServer extends Thread {
                 albumSearch(response.getOrDefault("name", " "));
             } else if(response.getOrDefault("type", " ").equals("album_info")) {
                 albumInfo(response.getOrDefault("artist_name", " "), response.getOrDefault("album_name", " "));
-            }
-            else if(response.getOrDefault("type", " ").equals("album_review")) {
+            } else if(response.getOrDefault("type", " ").equals("album_review")) {
                 reviewAlbum(response.getOrDefault("artist_name", " "), response.getOrDefault("album_name", " "), response.getOrDefault("username", " "), Integer.parseInt(response.getOrDefault("review", " ")), response.getOrDefault("review_desc", " "));
-            }
-            else if(response.getOrDefault("type", " ").equals("make_editor")) {
+            } else if(response.getOrDefault("type", " ").equals("make_editor")) {
                 makeEditor(response.getOrDefault("user", " "));
             } else if(response.getOrDefault("type", " ").equals("artist_edit")) {
                 artistEdit(response);
@@ -108,7 +106,27 @@ public class MulticastServer extends Thread {
                 albumAdd(response.getOrDefault("alb_name"," "), response.getOrDefault("release_date"," "), response.getOrDefault("artist"," "));
             } else if(response.getOrDefault("type", " ").equals("song_add")) {
                 songAdd(response.getOrDefault("song_name"," "), response.getOrDefault("lyrics"," "), response.getOrDefault("artist"," "), response.getOrDefault("album"," "));
+            } else if(response.getOrDefault("type", " ").equals("clean_artists")) {
+                cleanArtists();
             }
+        }
+    }
+
+    private void cleanArtists() {
+        try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
+            String result = "type:clean_artists_response;";
+            String query = "DELETE FROM artists WHERE idArtists NOT IN(SELECT Artists_idArtists FROM albums)";
+
+            System.out.println("Query: " + query);
+            if(st.executeUpdate(query) == 1)
+                result += "status:successful";
+            else
+                result += "status:unsuccessful";
+
+            send(result);
+        } catch (SQLException ex) {
+            Logger lgr = Logger.getLogger(MulticastServer.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 

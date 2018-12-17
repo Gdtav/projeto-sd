@@ -192,6 +192,14 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    public String clean_artists() throws RemoteException {
+        boolean response = this.getDropBean().clean_artists();
+        if(response == true)
+            this.session.put("cleanArtists_result", true);
+        else
+            this.session.put("cleanArtists_result", false);
+        return SUCCESS;
+    }
     /**
      * Gets drop bean.
      *

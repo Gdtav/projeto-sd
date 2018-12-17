@@ -20,9 +20,15 @@
 	</c:choose>
 
     <h1>Main Menu</h1>
-    <h2><a href='${pageContext.request.contextPath}/search.jsp'>Search Artist or Album</a></h2>
+    <button onclick='${pageContext.request.contextPath}/search.jsp'>Search Artist or Album</button>
+
+    <form action="clean_artists" method="post">
+        <input type="submit" value="Delete Artists with no albums">
+    </form>
 
 	<p><a href="<s:url action="index" />">Back to login</a></p>
+
+
 
 </body>
 </html>

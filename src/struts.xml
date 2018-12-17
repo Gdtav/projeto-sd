@@ -91,5 +91,10 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="clean_artists" class="WebStrut.Action.SearchAction" method="clean_artists">
+            <result name="success">/app.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
     </package>
 </struts>

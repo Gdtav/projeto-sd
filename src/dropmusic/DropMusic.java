@@ -141,4 +141,6 @@ public interface DropMusic extends Remote {
     boolean addAlbum(String name, String date, String artist) throws RemoteException;
 
     boolean addSong(String name, String lyrics, String artist, String album) throws RemoteException;
+
+    boolean cleanArtists() throws RemoteException;
 }
