@@ -13,7 +13,6 @@ public class LoginAction extends ActionSupport implements SessionAware {
 
     @Override
     public String execute() throws RemoteException {
-        // any username is accepted without confirmation (should check using RMI)
         if(this.username != null && !username.equals("")) {
             this.getDropBean().setUsername(this.username);
             this.getDropBean().setPassword(this.password);

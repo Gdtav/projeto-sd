@@ -12,13 +12,20 @@ import java.util.Map;
 public class SearchAction extends ActionSupport implements SessionAware {
     private Map<String, Object> session;
     private String input;
-    private String artist, album, song;
+    private String artist, album, desc;
+    private int rating;
 
     public String albums() throws RemoteException {
         // any username is accepted without confirmation (should check using RMI)
         ArrayList<String> albs = this.getDropBean().searchAlbums(input);
         this.session.put("albums", albs);
         this.session.put("search_result_alb", true);
+        this.session.remove("search_result_art_info");
+        this.session.remove("search_result_alb_info");
+        this.session.remove("artist");
+        this.session.remove("artist_albs");
+        this.session.remove("album_reviews");
+        this.session.remove("album_songs");
         return SUCCESS;
     }
 
@@ -27,11 +34,18 @@ public class SearchAction extends ActionSupport implements SessionAware {
         ArrayList<String> arts = this.getDropBean().searchArtists(input);
         this.session.put("artists", arts);
         this.session.put("search_result_art", true);
+        this.session.remove("search_result_art_info");
+        this.session.remove("search_result_alb_info");
+        this.session.remove("artist");
+        this.session.remove("artist_albs");
+        this.session.remove("album_reviews");
+        this.session.remove("album_songs");
         return SUCCESS;
     }
 
     public String artist_info() throws RemoteException {
-        HashMap<String, String> art_info = this.getDropBean().artistInfo(artist);
+        this.getDropBean().setArtist(this.artist);
+        HashMap<String, String> art_info = this.getDropBean().artistInfo();
         ArrayList<HashMap<String, String>> art_albums = new ArrayList<>();
 
         for(int i=0;art_info.containsKey("album_"+i);i++) {
@@ -43,12 +57,16 @@ public class SearchAction extends ActionSupport implements SessionAware {
         this.session.put("artist", art_info);
         this.session.put("artist_albs", art_albums);
         this.session.put("search_result_art_info", true);
+        this.session.remove("search_result_alb_info");
+        this.session.remove("album_reviews");
+        this.session.remove("album_songs");
 
         return SUCCESS;
     }
 
     public String album_info() throws RemoteException {
-        HashMap<String, String> alb_info = this.getDropBean().albumInfo(album);
+        this.getDropBean().setAlbum(this.album);
+        HashMap<String, String> alb_info = this.getDropBean().albumInfo();
         ArrayList<HashMap<String, String>> reviews = new ArrayList<>();
         ArrayList<String> songs = new ArrayList<>();
 
@@ -66,6 +84,33 @@ public class SearchAction extends ActionSupport implements SessionAware {
         this.session.put("album_songs", songs);
         this.session.put("album_reviews", reviews);
         this.session.put("search_result_alb_info", true);
+        return SUCCESS;
+    }
+
+    public String review_alb() throws RemoteException {
+        System.out.println("Album Selected:" + album);
+        boolean response = this.getDropBean().review_alb(rating,desc);
+        if(response == true)
+            this.session.put("review_result", true);
+        else
+            this.session.put("review_result", false);
+        return SUCCESS;
+    }
+
+    public String show_insert_artist() {
+        this.session.put("insert_artist", true);
+
+        return SUCCESS;
+    }
+
+    public String show_insert_album() {
+        this.session.put("insert_album", true);
+
+        return SUCCESS;
+    }
+
+    public String show_insert_song() {
+        this.session.put("insert_song", true);
 
         return SUCCESS;
     }
@@ -90,6 +135,14 @@ public class SearchAction extends ActionSupport implements SessionAware {
 
     public void setAlb_selected(String album) {
         this.album = album;
+    }
+
+    public void setReview_score(int score) {
+        this.rating = score;
+    }
+
+    public void setReview_desc(String desc) {
+        this.desc = desc;
     }
 
     @Override

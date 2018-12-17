@@ -375,6 +375,7 @@ public class MulticastServer extends Thread {
             "(SELECT idUsers FROM users WHERE username = '" + user + "'),"+
             "(SELECT idAlbums FROM albums WHERE name = '" + alb_name + "'),(SELECT Artists_idArtists FROM albums WHERE name = '" + alb_name + "'))";
 
+            System.out.println("Query: " + query);
             if(st.executeUpdate(query) == 1)
                 result += "status:successful";
             else

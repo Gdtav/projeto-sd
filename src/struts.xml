@@ -51,5 +51,25 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="review" class="WebStrut.Action.SearchAction" method="review_alb">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="show_insert_artist" class="WebStrut.Action.SearchAction" method="show_insert_artist">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="show_insert_album" class="WebStrut.Action.SearchAction" method="show_insert_album">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="show_insert_song" class="WebStrut.Action.SearchAction" method="show_insert_song">
+            <result name="success">/search.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
     </package>
 </struts>

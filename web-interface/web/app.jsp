@@ -12,7 +12,7 @@
 
 	<c:choose>
 		<c:when test="${session.loggedin == true}">
-			<p>Welcome, ${session.username}. Tell someone to fuck off!</p>
+			<p>Welcome, ${session.username}.</p>
 		</c:when>
 		<c:otherwise>
 			<p>Welcome, anonymous user. Tell someone to fuck off!</p>
