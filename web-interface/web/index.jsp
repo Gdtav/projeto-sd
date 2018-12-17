@@ -13,5 +13,6 @@
   <s:password label="Password" name="password" /><br>
   <s:submit />
 </s:form>
+<a href="register.jsp">Registrar-se</a>
 </body>
 </html>

@@ -58,17 +58,20 @@ public class Server extends UnicastRemoteObject implements DropMusic {
 
 
     @Override
-    public void register(String username, String password) {
+    public boolean register(String username, String password) {
         send("type:register;user:" + username + ";password:" + password);
         HashMap<String, String> response;
         response = listener.getMessage("type","register_response");
         if (!response.isEmpty()) {
             if (response.get("status").equals("successful")) {
                 System.out.println("Registration successful. You can login with your username and password.");
+                return true;
             } else {
                 System.out.println("Registration failed. Reason: " + response.get("reason"));
+                return false;
             }
         }
+        return false;
     }
 
     @Override

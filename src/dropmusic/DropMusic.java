@@ -21,7 +21,7 @@ public interface DropMusic extends Remote {
      * @param password the password
      * @throws RemoteException the remote exception
      */
-    void register(String username, String password) throws RemoteException;
+    boolean register(String username, String password) throws RemoteException;
 
     /**
      * Logon user array list.

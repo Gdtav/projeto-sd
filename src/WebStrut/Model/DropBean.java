@@ -33,6 +33,10 @@ public class DropBean {
         }
     }
 
+    public boolean Register(String username, String password) throws RemoteException {
+        return server.register(username,password);
+    }
+
     /**
      * Verifies in the Remote Server if the login is correct
      *
