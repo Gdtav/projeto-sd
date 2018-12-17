@@ -1,21 +1,5 @@
-/**
- * DROPMUSIC
- * RMI Client
- * This Client interfaces with the user through the command line (A Web Interface is to be implemented),
- * with navigation based through option insertion and input reading. It communicates with the RMI server located on the
- * address requested at the beggining of the execution, which requires that both RMI servers are running on the same host.
- * It gets a reference to the remote object's implementation of the interface and uses it to make the queries to the
- * Multicast Server.
- * It has a Failover thread running in the background that detects when the main server fails and quickly rebinds to the
- * secondary server's object, thus providing zero evidence of the error to the user.
- */
-
 package dropmusic;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -26,7 +10,15 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * The Client class which contains information about its own status.
+ * DROPMUSIC
+ * RMI Client
+ * This Client interfaces with the user through the command line (A Web Interface is to be implemented),
+ * with navigation based through option insertion and input reading. It communicates with the RMI server located on the
+ * address requested at the beggining of the execution, which requires that both RMI servers are running on the same host.
+ * It gets a reference to the remote object's implementation of the interface and uses it to make the queries to the
+ * Multicast Server.
+ * It has a Failover thread running in the background that detects when the main server fails and quickly rebinds to the
+ * secondary server's object, thus providing zero evidence of the error to the user.
  */
 public class Client implements Remote {
 
@@ -47,7 +39,7 @@ public class Client implements Remote {
     }
 
     /**
-     * Main function for Client program. Here the RMI host's address is requested for remote connection
+     * The entry point of application.
      *
      * @param args the input arguments
      */
@@ -120,10 +112,9 @@ public class Client implements Remote {
     }
 
     /**
-     * The Main Menu method, which is called upon successful login and is different for editors and common users.
-     * @param editor states if user has editor privileges.
+     * Main menu of the cli client.
+     * @param editor if user is editor, show more options.
      */
-
     private void mainMenu(boolean editor) {
         int option;
         while (true) {
@@ -184,11 +175,9 @@ public class Client implements Remote {
 
     }
 
-
     /**
-     * Menu for TCP connection with the dataserver.
+     * Menu for TCP connection with dataserver.
      */
-
     private void connectTCP() {
         System.out.println("Select an option:");
         System.out.println("1 - Upload file");
@@ -220,13 +209,10 @@ public class Client implements Remote {
         }
     }
 
-
     /**
-     * The Search Menu method, which is used for both search and editing of information.
-     *
-     * @param edition states if the menu has been called for editing info or not.
+     * Menu for searching elements.
+     * @param edition to adapt menu if user is editor.
      */
-
     private void searchMenu( boolean edition) {
         HashMap<Integer, String> result = new HashMap<>();
         HashMap<String, String> edit = new HashMap<>();
@@ -330,8 +316,10 @@ public class Client implements Remote {
 
     /**
      * Gets server.
+     *
+     * @return the server
      */
-    private DropMusic getServer() {
+    DropMusic getServer() {
         return server;
     }
 
@@ -345,11 +333,11 @@ public class Client implements Remote {
     }
 
     /**
-     * Method for uploading files to dataserver
-     * @implNote not implemented
-     * @param filepath is local file path
-     * @param song is song name
+     * Method to create a TCP connection with the dataserver and upload a file
+     * @param filepath
+     * @param song
      */
+
     private void uploadFile(String filepath, String song) {
         /*try {
             Socket socket = new Socket(server.getIP(), 7001);
@@ -362,15 +350,19 @@ public class Client implements Remote {
         }*/
     }
 
-    /**
-     * Method for uploading files to dataserver
-     * @implNote not implemented
-     * @param song is song name
-     */
 
+    /**
+     * Method to create a TCP connection with the dataserver and download a file
+     * @param song
+     */
     private void downloadFile(String song) {
         // TODO
     }
+
+    /**
+     * utility function to protect from bad inputs
+     * @return the sanitized input
+     */
 
     private static int protectedInputInt() {
         while (true) {
@@ -383,6 +375,11 @@ public class Client implements Remote {
             }
         }
     }
+
+    /**
+     * utility function to protect from bad inputs
+     * @return the sanitized input
+     */
 
     private static String protectedInputStr() {
         while (true) {

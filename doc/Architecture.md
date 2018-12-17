@@ -1,8 +1,9 @@
 # Program Architecture
 
-    3 Multicast Servers
-    2 RMI Servers (Main and Backup)
-    1 RMI Client
+    Multicast Servers
+    RMI Servers (Main and Backup)
+    RMI Client
+    Web Interface
 
 ## Multicast Servers ##
 
@@ -20,3 +21,15 @@
  - Simple UI with Graphical Interface 
  - Interacts with the RMI server through UDP
  - Directly deals with download/upload of music files with one Multicast Server through TCP (IP Request)
+
+## Web Interface ##
+
+ - Implementation with JSP's and Struts2
+ - Deployment on Tomcat Server
+ - MVC architecture
+     - DropBean object for 
+        - storage of session-related information
+        - communication with RMI server
+     - Action classes defined through the struts.xml for interaction with the user
+     - JavaServer Pages for dinamically present content to the user
+ 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The implementation of interface DropMusic on the server.
+ * The implementation class of the application's remote interface
  */
 public class Server extends UnicastRemoteObject implements DropMusic {
 
@@ -33,11 +33,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         PORT = port;
         this.listener = listener;
     }
-
-    /**
-     * Implementation of the interface's method.
-     * sends the passed string through a MulticastSocket
-     */
 
     private void send(String message) {
         try {
@@ -62,32 +57,22 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
 
-    /**
-     * Implementation of the interface's method.
-     *
-     * @param password receives user password
-     * @param username receives username
-     */
-
     @Override
-    public void register(String username, String password) {
+    public boolean register(String username, String password) {
         send("type:register;user:" + username + ";password:" + password);
         HashMap<String, String> response;
         response = listener.getMessage("type","register_response");
         if (!response.isEmpty()) {
             if (response.get("status").equals("successful")) {
                 System.out.println("Registration successful. You can login with your username and password.");
+                return true;
             } else {
                 System.out.println("Registration failed. Reason: " + response.get("reason"));
+                return false;
             }
         }
+        return false;
     }
-
-    /**
-     * Implementation of the interface's method.
-     * @param password inserted password
-     * @param username inserted username
-     */
 
     @Override
     public ArrayList<String> logonUser(String username, String password) {
@@ -119,11 +104,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         return res;
     }
 
-    /**
-     * Implementation of the interface's method.
-     * @param input user search term
-     */
-
     @Override
     public ArrayList<String> artistSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
@@ -142,11 +122,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         return query;
     }
 
-    /**
-     * Implementation of the interface's method.
-     * @param input user search term
-     */
-
     @Override
     public ArrayList<String> albumSearch(String input) {
         ArrayList<String> query = new ArrayList<>();
@@ -163,11 +138,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         }
         return query;
     }
-
-    /**
-     * Implementation of the interface's method.
-     * @param input user search term
-     */
 
     @Override
     public ArrayList<String> albumFromArtistSearch(String input) {
@@ -186,11 +156,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         return query;
     }
 
-    /**
-     * Implementation of the interface's method.
-     * @param input user to become editor
-     */
-
     @Override
     public boolean makeEditor(String input) {
         send("type:make_editor;user:" + input);
@@ -200,15 +165,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         else
             return false;
     }
-
-    /**
-     * Implementaion of the interface's method
-     * @param grade    the grade
-     * @param review   the review
-     * @param album    the album
-     * @param username the username
-     * @return the success of the operation.
-     */
 
     @Override
     public boolean reviewAlbum(int grade, String review, String album, String username) {
@@ -221,18 +177,11 @@ public class Server extends UnicastRemoteObject implements DropMusic {
     }
 
 
-    /**
-     * Dummy method. If the server fails it throws an exception and the secondary server binds its registry.
-     */
     @Override
     public void isAlive() {
 
     }
 
-    /**
-     * Implementaion of the interface's method
-     * @param input the input
-     */
     @Override
     public void editArtistInfo(HashMap<String, String> input) {
         StringBuilder query = new StringBuilder("type:artist_edit;name:" + input.get("name") + ";activity_start:" + input.get("activity_start") +
@@ -245,21 +194,12 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         send(query.toString());
     }
 
-    /**
-     * Implementaion of the interface's method
-     * @param input the input
-     * @return an array with the Artis's informations.
-     */
     @Override
     public HashMap<String, String> showArtistInfo(String input) {
         send("type:artist_info;name:" + input);
         return listener.getMessage("type", "artist_info_response");
     }
 
-    /**
-     * Implementaion of the interface's method
-     * @param input the input
-     */
     @Override
     public void editAlbumInfo(HashMap<String, String> input) {
         StringBuilder query = new StringBuilder("type:album_edit;name:" + input.get("name") + ";artist_name:" + input.get("artist_name") +
@@ -270,12 +210,6 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         System.out.println(query);
         send(query.toString());
     }
-
-    /**
-     * Implementaion of the interface's method
-     * @param input the input
-     * @return an array with the Album's informations.
-     */
 
     @Override
     public HashMap<String, String> showAlbumInfo(String input) {

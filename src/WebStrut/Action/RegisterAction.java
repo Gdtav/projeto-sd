@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
 import java.util.Map;
 
 /**
- * The type Login action.
+ * The type Register action.
  */
-public class LoginAction extends ActionSupport implements SessionAware {
+public class RegisterAction extends ActionSupport implements SessionAware {
     private Map<String, Object> session;
     private String username = null, password = null;
 
@@ -20,7 +20,7 @@ public class LoginAction extends ActionSupport implements SessionAware {
             this.getDropBean().setUsername(this.username);
             this.getDropBean().setPassword(this.password);
             session.put("username", username);
-            if(!this.getDropBean().getUserMatchesPassword())
+            if(!this.getDropBean().Register(this.username,this.password))
                 return LOGIN;
             session.put("loggedin", true); // this marks the user as logged in
             return SUCCESS;
