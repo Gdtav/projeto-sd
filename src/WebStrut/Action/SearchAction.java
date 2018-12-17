@@ -165,6 +165,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * New artist string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String new_artist() throws RemoteException {
         boolean response = this.getDropBean().add_art(new_art,new_date1,new_date2,new_desc);
         if(response == true)
@@ -174,6 +180,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * New album string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String new_album() throws RemoteException {
         boolean response = this.getDropBean().add_alb(new_alb,new_alb_release);
         if(response == true)
@@ -183,6 +195,12 @@ public class SearchAction extends ActionSupport implements SessionAware {
         return SUCCESS;
     }
 
+    /**
+     * New song string.
+     *
+     * @return the string
+     * @throws RemoteException the remote exception
+     */
     public String new_song() throws RemoteException {
         boolean response = this.getDropBean().add_song(new_song,new_song_lyrics);
         if(response == true)
@@ -258,35 +276,75 @@ public class SearchAction extends ActionSupport implements SessionAware {
     }
 
 
+    /**
+     * Sets new art name.
+     *
+     * @param name the name
+     */
     public void setNew_art_name(String name) {
         this.new_art = name;
     }
 
+    /**
+     * Sets new art start.
+     *
+     * @param date the date
+     */
     public void setNew_art_start(String date) {
         this.new_date1 = date;
     }
 
+    /**
+     * Sets new art end.
+     *
+     * @param date the date
+     */
     public void setNew_art_end(String date) {
         this.new_date2 = date;
     }
 
+    /**
+     * Sets new artist desc.
+     *
+     * @param desc the desc
+     */
     public void setNew_artist_desc(String desc) {
         this.new_desc = desc;
     }
 
 
+    /**
+     * Sets new alb name.
+     *
+     * @param name the name
+     */
     public void setNew_alb_name(String name) {
         this.new_alb = name;
     }
 
+    /**
+     * Sets new alb release.
+     *
+     * @param release the release
+     */
     public void setNew_alb_release(String release) {
         this.new_alb_release = release;
     }
 
+    /**
+     * Sets new song name.
+     *
+     * @param name the name
+     */
     public void setNew_song_name(String name) {
         this.new_song = name;
     }
 
+    /**
+     * Sets new song lyrics.
+     *
+     * @param lyrics the lyrics
+     */
     public void setNew_song_lyrics(String lyrics) { this.new_song_lyrics = lyrics; }
 
     @Override

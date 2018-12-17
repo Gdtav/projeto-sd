@@ -33,6 +33,14 @@ public class DropBean {
         }
     }
 
+    /**
+     * Register boolean.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the boolean
+     * @throws RemoteException the remote exception
+     */
     public boolean Register(String username, String password) throws RemoteException {
         return server.register(username,password);
     }
@@ -107,14 +115,40 @@ public class DropBean {
         return server.reviewAlbum(score,desc,album,username);
     }
 
+    /**
+     * Add art boolean.
+     *
+     * @param name  the name
+     * @param date1 the date 1
+     * @param date2 the date 2
+     * @param desc  the desc
+     * @return the boolean
+     * @throws RemoteException the remote exception
+     */
     public boolean add_art(String name, String date1, String date2, String desc) throws RemoteException {
         return server.addArtist(name,date1,date2,desc);
     }
 
+    /**
+     * Add alb boolean.
+     *
+     * @param name the name
+     * @param date the date
+     * @return the boolean
+     * @throws RemoteException the remote exception
+     */
     public boolean add_alb(String name, String date) throws RemoteException {
         return server.addAlbum(name,date,artist);
     }
 
+    /**
+     * Add song boolean.
+     *
+     * @param name   the name
+     * @param lyrics the lyrics
+     * @return the boolean
+     * @throws RemoteException the remote exception
+     */
     public boolean add_song(String name, String lyrics) throws RemoteException {
         return server.addSong(name,lyrics,artist,album);
     }

@@ -5,13 +5,13 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-    /**
-     * DROPMUSIC
-     * Program's remote interface
-     * Failover, Client, Server, RMIServer, DropMusic, MulticastListener classes created by Guilherme Tavares,
-     * revised and corrected by Pedro Silva.
-     * MulticastServer created by Pedro Silva.
-     */
+/**
+ * DROPMUSIC
+ * Program's remote interface
+ * Failover, Client, Server, RMIServer, DropMusic, MulticastListener classes created by Guilherme Tavares,
+ * revised and corrected by Pedro Silva.
+ * MulticastServer created by Pedro Silva.
+ */
 public interface DropMusic extends Remote {
 
     /**
@@ -19,6 +19,7 @@ public interface DropMusic extends Remote {
      *
      * @param username the username
      * @param password the password
+     * @return the boolean
      * @throws RemoteException the remote exception
      */
     boolean register(String username, String password) throws RemoteException;
@@ -125,7 +126,10 @@ public interface DropMusic extends Remote {
     /**
      * Add artist string.
      *
-     * @param input the input
+     * @param name  the name
+     * @param date1 the date 1
+     * @param date2 the date 2
+     * @param desc  the desc
      * @return the string
      * @throws RemoteException the remote exception
      */
@@ -134,11 +138,23 @@ public interface DropMusic extends Remote {
     /**
      * Add album string.
      *
-     * @param input the input
+     * @param name   the name
+     * @param date   the date
+     * @param artist the artist
      * @return the string
      * @throws RemoteException the remote exception
      */
     boolean addAlbum(String name, String date, String artist) throws RemoteException;
 
+    /**
+     * Add song boolean.
+     *
+     * @param name   the name
+     * @param lyrics the lyrics
+     * @param artist the artist
+     * @param album  the album
+     * @return the boolean
+     * @throws RemoteException the remote exception
+     */
     boolean addSong(String name, String lyrics, String artist, String album) throws RemoteException;
 }

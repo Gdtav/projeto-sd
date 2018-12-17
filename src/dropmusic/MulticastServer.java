@@ -577,6 +577,14 @@ public class MulticastServer extends Thread {
         send(result);
     }
 
+    /**
+     * Artist add.
+     *
+     * @param name      the name
+     * @param act_start the act start
+     * @param act_end   the act end
+     * @param desc      the desc
+     */
     public void artistAdd(String name, String act_start, String act_end, String desc) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String result = "type:artist_add_response;";
@@ -595,6 +603,13 @@ public class MulticastServer extends Thread {
         }
     }
 
+    /**
+     * Album add.
+     *
+     * @param name   the name
+     * @param date   the date
+     * @param artist the artist
+     */
     public void albumAdd(String name, String date, String artist) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String result = "type:album_add_response;";
@@ -613,6 +628,14 @@ public class MulticastServer extends Thread {
         }
     }
 
+    /**
+     * Song add.
+     *
+     * @param name   the name
+     * @param lyrics the lyrics
+     * @param artist the artist
+     * @param album  the album
+     */
     public void songAdd(String name, String lyrics, String artist, String album) {
         try (Connection con = DriverManager.getConnection(url, sql_user, sql_password); Statement st = con.createStatement()) {
             String result = "type:song_add_response;";
@@ -632,6 +655,7 @@ public class MulticastServer extends Thread {
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
+
     /**
      * Count rows int.
      *
