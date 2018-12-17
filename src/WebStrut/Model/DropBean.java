@@ -153,6 +153,9 @@ public class DropBean {
         return server.addSong(name,lyrics,artist,album);
     }
 
+    public boolean clean_artists() throws RemoteException {
+        return server.cleanArtists();
+    }
     /**
      * Sets username.
      *

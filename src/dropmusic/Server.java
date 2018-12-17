@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -242,6 +243,16 @@ public class Server extends UnicastRemoteObject implements DropMusic {
         HashMap<String, String> response;
         send("type:song_add;song_name:" + name + ";lyrics:" + lyrics + ";artist:" + artist + ";album:" + album);
         if ((response = listener.getMessage("type", "song_add_response")) != null) {
+            return response.get("status").equals("successful");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean cleanArtists() throws RemoteException {
+        HashMap<String, String> response;
+        send("type:clean_artists");
+        if ((response = listener.getMessage("type", "clean_artists_response")) != null) {
             return response.get("status").equals("successful");
         }
         return false;
